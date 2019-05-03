@@ -1,0 +1,152 @@
+= Block! - typ danych
+:toc:
+:numbered:
+
+== Streszczenie
+
+Wartości `block!` służą do reprezentacji danych albo kodu, który może być uruchomiony w dowolnym momencie. Jest typu `series!` bez ograniczeń typu wartości w nim przechowywanym.
+
+Wartości i wyrażenia w `block!` nie są automatycznie uruchomiane:
+
+----
+>> my-block: [print reverse "Hello" 2 * 2 42]
+== [print reverse "Hello" 2 * 2 42]
+
+>> my-block
+== [print reverse "Hello" 2 * 2 42]
+----
+
+Wartości typu `native!`, `do` i `reduce`, służą do uruchomienia wyrażeń zawartych w `block!`.
+
+* `do` uruchamia kod wewnątrz `block!`u i zwraca wartość ostatniego wyrażenia:
+
+----
+>> do my-block
+olleH
+== 42
+----
+
+* `reduce` zwraca kopie `block!`u z każdym wyrażeniem uruchomionym:
+
+----
+>> reduce my-block
+olleH
+== [unset 4 42]
+----
+
+`Block!` jest członkiem danych typesetów (zbiór typów): `any-block!`, `any-list!`, `series!`
+
+== Tworzenie
+
+Wartości `block!` mogą być stworzone za pomocą dosłownej składni, albo w czasie wykonywania za pomocą konstruktora `make` albo konwertera `to`.
+
+Aby stworzyć pusty `block!` z wstępnie przydzielonym miejscem na 10 elementów:
+
+----
+>> make block! 10
+== []
+----
+
+Aby stworzyć `block!` o rozmiarze 10 z wstępnie przydzielonymi wartościami `none`:
+
+----
+>> append/dup make block! 10 none 10
+== [none none none none none none none none none none]
+----
+
+Używanie konwertera `to`:
+
+----
+>> to block! {one 2 "three" 4:00}
+== [one 2 "three" 4:00:00]
+
+>> to block! "foo 1.23 me@me.com"
+== [foo 1.23 me@me.com]
+
+>> to block! 42
+== [42]
+----
+
+
+== Dosłowna składnia
+
+Kolekcja wartości ograniczoną przez `[` i `]` odseparowanymi przez spacje.
+
+`[]`
+
+`[one 2 "three"]`
+
+`[print 1.23]`
+
+
+`block!` może rozciągać się przez wiele linii i zawierać inne wartości typu `block!`.
+
+----
+[one
+2
+"three"
+]
+
+[one 2 "three" [x foo 1.23]]
+----
+
+
+Dodatkowe linie, spacje i tabulacje są dozwolone jeżeli nie przerywają wartości.
+
+Poprawny zapis: `[42 print "foo"]`
+
+Niepoprawny zapis: `[42 pr int "foo"]`
+
+
+== Uzyskiwanie dostępu do elementów
+
+Wartości typu `block!` mogą być indeksowane używając _notacji ścieżki_, używając wartości `integer!` zaczynając indeksowanie od 1:
+
+----
+>> b: [12 [34 56]]
+== [12 [34 56]]
+
+>> b/1
+== 12
+
+>> b/2/2
+== 56
+----
+
+Wartości `block!` (i każde wartości `any-list!`) mogą być traktowane jako magazyn danych klucz/wartość;
+w takich przypadkach pierwsze wystąpienie klucza, zapisane w ścieżce, będzie wyszukane i wartość,
+która następuje po niej będzie zwrócona.
+
+----
+>> b: [x 12 y [z 34]]
+== [x 12 y [z 34]]
+
+>> b/x
+== 12
+
+>> b/y
+== [z 34]
+
+>> b/y/z
+== 34
+----
+
+== Porównania
+
+Wszystkie operatory porównań mogą być użyte z `block!`: `=, ==, <>, >, <, >=, &lt;=, =?`. Ponadto, `min` i `max` też są wspierane.
+
+== Testowanie wartości
+
+Użyj `block?`, aby sprawdzić czy wartość jest typu `block!`.
+
+----
+>> block? [42]
+== true
+----
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+----
+>> type? [42]
+== block!
+----

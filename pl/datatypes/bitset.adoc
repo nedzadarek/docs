@@ -1,0 +1,251 @@
+= Bitset! - typ danych
+:toc:
+:numbered:
+
+// Stworzone na podstawie https://www.red-lang.org/2013/11/041-introducing-parse.html
+
+== Streszczenie
+
+Wartość `bitset!` jest kolekcją bitów używanych do przechowywania wartości typu  boolean (przyp. tłum. prawda/fałsz). Indeksowanie `bitset!` zaczyna się od 0. Wartość `1` reprezentuje `true` (przyp. tłum. prawda) i `0` reprezentuje `false`(przyp. tłum. fałsz).
+
+`Bitset!` jest członkiem typesetów (przyp. tłum. zbiorów typów): `default!`
+
+== Tworzenie
+
+Wartości bitset! mogą być stworzone przez konstruktor `make`, konwerter `to` albo używając funkcji `charset`.
+
+== Tworzenie w czasie wykonywania
+
+// z https://github.com/meijeru/red.specs-public
+
+```
+<bitset> ::= make bitset! <binary> | make bitset! <bitset-spec> | to bitset! <bitset-spec> | charset <bitset-spec>
+<bitset-spec> ::= <integer> | <char> | <string> | [<bit-position>*] | [not <bit-position>*]
+<bit-position> ::= <integer> | <char> | <string> | <char> - <char> | <integer> - <integer>
+```
+
+=== Make
+
+```red
+>> make bitset! 50    ; tworzy pusty bitset z miejscem na co najmniej 50 bitów
+== make bitset! #{00000000000000}
+```
+
+```red
+>> make bitset! #"A"   ; tworzy bitset z bitem nr. 65 ustawionym
+== make bitset! #{000000000000000040}
+```
+
+```red
+>> make bitset! "hi"   ; tworzy bitset z bitami nr. 104 i 105 ustawionymi
+== make bitset! #{00000000000000000000000000C0}
+```
+
+```red
+>> make bitset! [120 "hello" #"A"]   ; tworzy i ustawia bity używając różnych reprezentacji danych
+== make bitset! #{00000000000000004000000004890080}
+```
+
+Używając zakresu:
+
+Zakres jest zdefiniowany przez dwie wartości `char!` albo `integer!` , odseparowanymi przez myślnik.
+
+```red
+>> make bitset! [#"0" - #"9" #"a" - #"z"]   ; tworzy bitset używając zakresu
+== make bitset! #{000000000000FFC0000000007FFFFFE0}
+```
+
+Rozmiar bitsetów jest automatycznie rozszerzana, aby zmieścić podane dane. Rozmiar jest zaokrąglany do górnej granicy bajtu.
+
+=== To
+
+Konwersja wartości do bitset przy użyciu `to` jest równoważna użyciu `make bitset!`, z wyjątkiem wartości `integer!`, które nie są akceptowalne.
+
+```red
+>> to bitset! 42
+*** Script Error: cannot MAKE/TO bitset! from: 42
+*** Where: to
+*** Stack:
+```
+
+```red
+>> to bitset! #"A"   ; bitset z ustawionym bitem nr. 65
+== make bitset! #{000000000000000040}
+```
+
+```red
+>> to bitset! "hi"   ; bitset z ustawionymi bitami nr. 104 i 105
+== make bitset! #{00000000000000000000000000C0}
+```
+
+```red
+>> to bitset! [#"0" - #"9" #"a" - #"z"]   ; bitset z użyciem zakresu wartości
+== make bitset! #{000000000000FFC0000000007FFFFFE0}
+```
+
+=== Charset
+
+```red
+>> source charset
+charset: func ["Shortcut for `make bitset!`"
+    spec [block! integer! char! string!]
+][
+    make bitset! spec
+]
+```
+
+`Charset` jest skrótem od `make bitset!`, z wyjątkiem wartości `binary!`, które nie są akceptowalne.
+
+```red
+>> charset #{2A}
+*** Script Error: charset does not allow binary! for its spec argument
+*** Where: charset
+*** Stack: charset
+```
+
+```red
+>> charset [120 "hello" #"A"]   ; tworzy i ustawia bity używając różnych reprezentacji danych
+== make bitset! #{00000000000000004000000004890080}
+```
+
+```red
+>> charset [#"0" - #"9" #"a" - #"z"]   ; tworzy bitset używając zakresów znaków
+== make bitset! #{000000000000FFC0000000007FFFFFE0}
+```
+
+== Dopełnienia
+
+Aby poradzić sobie z szerokim zakresem znaków Unicode, bity poza bitsetami są traktowane jako wirtualne bity
+więc mogą być testowane i ustawiane bez błędów. Rozmiar bitsetu będzie automatycznie powiększany w razie potrzeby.
+
+To jest nie wystarczające, aby poradzić sobie z bitsetami dla na przykład `każdego znaku Unicode oprócz cyfr`. Dla takiego przypadku jest możliwe zdefiniowanie dopełnienia bitsetu, który reprezentuje dopełnienie zakresu wymienionych bitów. Pozwala to na stworzenie bitsetu używając bardzo mało pamięci.
+
+
+Dopełnione bitsety mogą być stworzone przez dodanie `not` do specyfikacji.
+
+```red
+charset [not "0123456789"]   ; każde znaki oprócz cyfr
+== make bitset! [not #{000000000000FFC0}]
+```
+
+`Complement` może też być użyte do dopełnienia bitsetu.
+
+```red
+>> b: make bitset! 42
+== make bitset! #{000000000000}
+
+>> complemented-b: complement b
+== make bitset! [not #{000000000000}]
+```
+
+```red
+>> b: complement make bitset! 42
+== make bitset! [not #{000000000000}]
+```
+
+`Complement?` może być użyte do sprawdzenia czy bitset jest dopełnieniem innego bitsetu.
+
+```red
+>> complement? complemented-b
+== true
+
+>> complement? b: complement make bitset! 42
+== true
+```
+
+== Notacja ścieżki
+
+Do czytania i zapisu pojedynczych bitów użyj notacji ścieżki.
+
+```red
+bs: charset [#"a" - #"z"]
+bs/97     ; zwróci true
+bs/40     ; zwróci false
+bs/97: false
+bs/97     ; zwróci false
+```
+
+== Operacja na zbiorach
+
+Operacje na zbiorach danych zgodne z `bitset!``: `difference`, `exclude`, `intersect`, `union`
+
+```red
+>> a: charset "abc"
+== make bitset! #{00000000000000000000000070}
+
+>> b: charset "ABC"
+== make bitset! #{000000000000000070}
+```
+
+Elementy, które znajdują się tylko z jednym ze zbiorów.
+```red
+>> difference a b
+== make bitset! #{00000000000000007000000070}
+```
+
+Elementy ze zbioru pierwszego z wykluczeniem elementów zbioru drugiego.
+```red
+>> exclude a b
+== make bitset! #{00000000000000000000000070}
+```
+
+Elementy, które znajdują się w obydwu zbiorach jednocześnie.
+```red
+>> intersect a b
+== make bitset! #{00000000000000000000000000}
+```
+
+
+Używając  `union` możesz złączyć dwa bitsety, aby stworzyć nowy bitset.
+
+```
+digit: charset "0123456789"
+lower: charset [#"a" - #"z"]
+upper: charset [#"A" - #"Z"]
+
+letters:  union lower upper
+hexa:     union upper digit
+alphanum: union letters digit
+```
+
+== Porównania
+
+Wszystkie operatory porównań mogą być użyte z `bitset!`: `=, ==, <>, >, <, >=, &lt;=, =?`.
+
+== Testowanie wartości
+
+Użyj `bitset?`, aby sprawdzić czy wartość jest typu `bitset!`.
+
+```red
+>> b: make bitset! 42
+== make bitset! #{000000000000}
+
+>> bitset? b
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? b
+== bitset!
+```
+
+
+== Uprzednio zdefiniowane słowa
+
+=== Akcje
+
+`and~`, `append`, `clear`, `complement`, `copy`, `find`, `insert`, `length?`, `negate`, `or~`, `pick`, `poke`, `remove`, `xor~`
+
+=== Funkcje
+
+`bitset?`, `charset`, `to-bitset`
+
+=== Natywne funkcje
+
+`complement?`, `difference`, `exclude`, `intersect`, `union`
+
+=== Operatory
+
+`and`, `or`, `xor`

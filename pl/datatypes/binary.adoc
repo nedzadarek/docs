@@ -1,0 +1,211 @@
+= Binary! - typ danych
+:toc:
+:numbered:
+
+
+== Streszczenie
+
+Wartość `binary!` opisuje kolekcje bajtów.
+
+`Binary!` jest członkiem danych typesetów (zbiór typów): `default!`, `series!`
+
+== Tworzenie
+
+Wartości `binary!` mogą być stworzone przez dosłowną składnie albo w czasie wykonywanie przez konstruktor `make` albo konwertera `to`.
+
+== Dosłowna składnia
+
+```
+<binary-literal> ::= 2#{<base2-byte>*} | 16#{<hex-byte>*} | 64#{<base64-char>*} | #{<hex-byte>*}
+```
+
+=== Tworzenie w czasie wykonywania
+
+***
+
+Używając dosłownej składni.
+
+Wartość o podstawie 2 musi się składać z grup 8-elementowych ze znakami z zakresu `0-1`.
+```red
+>> 2#{11111111}
+== #{FF}
+
+>> 2#{1111000000001111}
+== #{F00F}
+```
+
+Wartość o podstawie 16 jest domyślną podstawą i musi składać się z 2-elementowych grup ze znakami z zakresu `0-9 A-F a-f`.
+
+```red
+>> 16#{2A}
+== #{2A}
+
+>> 16#{2AFF}
+== #{2AFF}
+```
+
+Nieparzysta liczba znaków spowoduje błąd.
+
+```red
+>> 16#{2AF}
+*** Syntax Error: invalid binary! at "#{2AF}"
+*** Where: do
+*** Stack: load
+```
+
+Wartość o domyślnej podstawie (16) może być zapisana bez podstawy.
+
+```red
+>> #{2A}
+== #{2A}
+```
+
+Wartość o podstawie 64 musi się składać z 4-elementowych grup ze znakami z zakresu `0-9 A-Z a-z +/`.
+
+```red
+>> 64#{2AQQ}
+== #{D80410}
+
+>> 64#{2A+/}
+== #{D80FBF}
+```
+
+Mniej niż 4 znaki albo nieparzysta liczba znaków spowoduje błąd.
+
+```red
+>> 64#{2A}
+*** Syntax Error: invalid binary! at "64#{2A}"
+*** Where: do
+*** Stack: load
+
+>> 64#{2A2}
+*** Syntax Error: invalid binary! at "64#{2A2}"
+*** Where: do
+*** Stack: load
+```
+
+[NOTE]
+Wypełniający znak `=` może być użyty do kodowania i dekodowania.
+
+*Przykład kodowania*
+
+`I` koduje do `SQ`, gdzie wypełniający znak uzupełnia wynik do 4 znaków.
+
+```red
+>> enbase/base "I" 64
+== "SQ=="
+```
+
+***
+
+Użycie `make`.
+
+```red
+>> make binary! [42]
+== #{2A}
+```
+
+Użycie konwersji `to`.
+
+```red
+>> to binary! 42
+== #{0000002A}
+```
+
+== Pokrewne Funkcje
+
+* enbase
+
+```red
+>> help enbase
+USAGE:
+     ENBASE value
+
+DESCRIPTION:
+     Encodes a string into a binary-coded string (BASE-64 default).
+     ENBASE is a native! value.
+
+ARGUMENTS:
+     value        [binary! string!] "If string, will be UTF8 encoded."
+
+REFINEMENTS:
+     /base        => Binary base to use.
+        base-value   [integer!] "The base to convert from: 64, 58, 16, or 2."
+```
+
+*Enbase - przykład*
+
+```red
+>> enbase/base "I" 64
+== "SQ=="
+```
+
+* debase
+
+```red
+>> help debase
+USAGE:
+     DEBASE value
+
+DESCRIPTION:
+     Decodes binary-coded string (BASE-64 default) to binary value.
+     DEBASE is a native! value.
+
+ARGUMENTS:
+     value        [string!] "The string to decode."
+
+REFINEMENTS:
+     /base        => Binary base to use.
+        base-value   [integer!] "The base to convert from: 64, 58, 16, or 2."
+
+```
+
+*Debase - przykład*
+
+```red
+>> debase/base "SQ==" 64
+== #{49}
+
+>> to string! debase/base "SQ==" 64
+== "I"
+```
+
+== Porównania
+
+Wszystkie operatory porównań mogą być użyte z `binary!`: `=, ==, <>, >, <, >=, &lt;=, =?`. Ponadto, `min` i `max` też są wspierany.
+
+
+== Testowanie wartości
+
+Użyj `binary?`, aby sprawdzić czy wartość jest typu `binary!`.
+
+```red
+>> binary? #{2A}
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? #{2A}
+== binary!
+```
+
+
+== Uprzednio zdefiniowane słowa
+
+=== Akcje
+
+`complement`, `or~`, `put`, `read`, `trim`, `write`, `xor~`
+
+=== Funkcje
+
+`binary?`, `load`, `read-thru`, `save`, `to-binary`
+
+=== Natywne funkcje
+
+`call`, `checksum`, `debase`, `decompress`, `enbase`, `parse`
+
+=== Operatory
+
+`and`, `or`, `xor`
