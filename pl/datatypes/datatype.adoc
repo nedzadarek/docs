@@ -1,0 +1,79 @@
+= Datatype! - typ danych
+:toc:
+:numbered:
+
+== Streszczenie
+
+`Datatype!` reprezentuje każdy predefiniowany typ.
+
+`Datatype!` jest członkiem danych typesetów (zbiór typów): `default!`, `immediate!`
+
+== Tworzenie
+
+Wartości `datatype!` są predefiniowane i nie mogą być utworzone.
+
+== Dosłowna składnia
+
+Przez konwencje, `datatype!` jest wartością `word!` z wykrzyknikiem (`!`) na końcu.
+
+Przykłady: `bitset!`, `string!`, `time!`, `word!`
+
+== Konwersja
+
+Wartość `datatype!` może być przekonwertowana do `any-word!`, `issue!` i `refinement!`.
+
+```red
+>> to word! string!
+== string!
+
+>> to set-word! string!
+== string!:
+
+>> to lit-word! string!
+== 'string!
+
+>> to get-word! string!
+== :string!
+
+>> to issue! string!
+== #string!
+
+>> to refinement! string!
+== /string!
+```
+
+== Porównania
+
+Wartości `datatype!` nie wspierają porównań.
+
+== Testowanie wartości
+
+Użyj `datatype?`, aby sprawdzić czy wartość jest typu `datatype!`.
+
+```red
+>> datatype? string!
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? string!
+== datatype!
+```
+
+== Uprzednio zdefiniowane słowa
+
+Słowo `datatype!` odnosi się do wszystkich poprzednio zdefiniowanych datatypów. Listę datatypów można wyświetlić w konsoli przy użyciu `help datatype!`.
+
+=== Akcje
+
+`copy`
+
+=== Funkcje
+
+`to-get-word`, `to-issue`, `to-lit-word`, `to-refinement`, `to-set-word`, `to-word`
+
+=== Natywne funkcje
+
+`as`
