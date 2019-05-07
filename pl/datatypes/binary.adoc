@@ -16,7 +16,7 @@ Wartości `binary!` mogą być stworzone przez dosłowną składnie albo w czasi
 == Dosłowna składnia
 
 ```
-<binary-literal> ::= 2#{<base2-byte>*} | 16#{<hex-byte>*} | 64#{<base64-char>*} | #{<hex-byte>*}
+<binary-literal> ::= 2#{<bajt-podstawa2>*} | 16#{<bajt-podstawa16>*} | 64#{<znak-podstawa64>*} | #{<bajt-podstawa16>*}
 ```
 
 === Tworzenie w czasie wykonywania
@@ -105,7 +105,7 @@ Użycie `make`.
 == #{2A}
 ```
 
-Użycie konwersji `to`.
+Użycie konwertera `to`.
 
 ```red
 >> to binary! 42
@@ -172,7 +172,7 @@ REFINEMENTS:
 
 == Porównania
 
-Wszystkie operatory porównań mogą być użyte z `binary!`: `=, ==, <>, >, <, >=, &lt;=, =?`. Ponadto, `min` i `max` też są wspierany.
+Wszystkie operatory porównań mogą być użyte z `binary!`: `=, ==, <>, >, <, >=, &lt;=, =?`. Ponadto, `min` i `max` też są wspierane.
 
 
 == Testowanie wartości

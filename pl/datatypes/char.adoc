@@ -139,7 +139,7 @@ Nazwane znaki - składnia:
 
 == Porównania
 
-Wszystkie operatory porównań mogą być użyte z 'char!': `=, ==, <>, >, <, >=, &lt;=, =?`. Ponadto, `min`, `max` i `sort` też są wspierane. Porównania `char!` są rozróżniane ze względu na wielkość liter.
+Wszystkie operatory porównań mogą być użyte z `char!': `=, ==, <>, >, <, >=, &lt;=, =?`. Ponadto, `min`, `max` i `sort` też są wspierane. Porównania `char!` są rozróżniane ze względu na wielkość liter.
 
 *Przykłady*
 

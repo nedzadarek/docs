@@ -20,8 +20,8 @@ Wartości bitset! mogą być stworzone przez konstruktor `make`, konwerter `to` 
 
 ```
 <bitset> ::= make bitset! <binary> | make bitset! <bitset-spec> | to bitset! <bitset-spec> | charset <bitset-spec>
-<bitset-spec> ::= <integer> | <char> | <string> | [<bit-position>*] | [not <bit-position>*]
-<bit-position> ::= <integer> | <char> | <string> | <char> - <char> | <integer> - <integer>
+<bitset-spec> ::= <integer> | <char> | <string> | [<pozycja-bitu>*] | [not <pozycja-bitu>*]
+<pozycja-bitu> ::= <integer> | <char> | <string> | <char> - <char> | <integer> - <integer>
 ```
 
 === Make
@@ -59,7 +59,7 @@ Rozmiar bitsetów jest automatycznie rozszerzana, aby zmieścić podane dane. Ro
 
 === To
 
-Konwersja wartości do bitset przy użyciu `to` jest równoważna użyciu `make bitset!`, z wyjątkiem wartości `integer!`, które nie są akceptowalne.
+Konwersja wartości do `bitset!` przy użyciu `to` jest równoważna użyciu `make bitset!`, z wyjątkiem wartości `integer!`, które nie są akceptowalne.
 
 ```red
 >> to bitset! 42
@@ -69,17 +69,17 @@ Konwersja wartości do bitset przy użyciu `to` jest równoważna użyciu `make 
 ```
 
 ```red
->> to bitset! #"A"   ; bitset z ustawionym bitem nr. 65
+>> to bitset! #"A"   ; `bitset!` z ustawionym bitem nr. 65
 == make bitset! #{000000000000000040}
 ```
 
 ```red
->> to bitset! "hi"   ; bitset z ustawionymi bitami nr. 104 i 105
+>> to bitset! "hi"   ; `bitset!` z ustawionymi bitami nr. 104 i 105
 == make bitset! #{00000000000000000000000000C0}
 ```
 
 ```red
->> to bitset! [#"0" - #"9" #"a" - #"z"]   ; bitset z użyciem zakresu wartości
+>> to bitset! [#"0" - #"9" #"a" - #"z"]   ; `bitset!` z użyciem zakresu wartości
 == make bitset! #{000000000000FFC0000000007FFFFFE0}
 ```
 
@@ -109,7 +109,7 @@ charset: func ["Shortcut for `make bitset!`"
 ```
 
 ```red
->> charset [#"0" - #"9" #"a" - #"z"]   ; tworzy bitset używając zakresów znaków
+>> charset [#"0" - #"9" #"a" - #"z"]   ; tworzy `bitset!` używając zakresów znaków
 == make bitset! #{000000000000FFC0000000007FFFFFE0}
 ```
 
@@ -118,7 +118,7 @@ charset: func ["Shortcut for `make bitset!`"
 Aby poradzić sobie z szerokim zakresem znaków Unicode, bity poza bitsetami są traktowane jako wirtualne bity
 więc mogą być testowane i ustawiane bez błędów. Rozmiar bitsetu będzie automatycznie powiększany w razie potrzeby.
 
-To jest nie wystarczające, aby poradzić sobie z bitsetami dla na przykład `każdego znaku Unicode oprócz cyfr`. Dla takiego przypadku jest możliwe zdefiniowanie dopełnienia bitsetu, który reprezentuje dopełnienie zakresu wymienionych bitów. Pozwala to na stworzenie bitsetu używając bardzo mało pamięci.
+To jest nie wystarczające, aby poradzić sobie z bitsetami dla, na przykład, `każdego znaku Unicode oprócz cyfr`. Dla takiego przypadku jest możliwe zdefiniowanie dopełnienia bitsetu, który reprezentuje dopełnienie zakresu wymienionych bitów. Pozwala to na stworzenie bitsetu używając bardzo mało pamięci.
 
 
 Dopełnione bitsety mogą być stworzone przez dodanie `not` do specyfikacji.
