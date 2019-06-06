@@ -24,40 +24,42 @@ Wartości bitset! mogą być stworzone przez konstruktor `make`, konwerter `to` 
 <pozycja-bitu> ::= <integer> | <char> | <string> | <char> - <char> | <integer> - <integer>
 ```
 
-=== Make
+* `Make`
++
 
 ```red
 >> make bitset! 50    ; tworzy pusty bitset z miejscem na co najmniej 50 bitów
 == make bitset! #{00000000000000}
 ```
-
++
 ```red
 >> make bitset! #"A"   ; tworzy bitset z bitem nr. 65 ustawionym
 == make bitset! #{000000000000000040}
 ```
-
++
 ```red
 >> make bitset! "hi"   ; tworzy bitset z bitami nr. 104 i 105 ustawionymi
 == make bitset! #{00000000000000000000000000C0}
 ```
-
++
 ```red
 >> make bitset! [120 "hello" #"A"]   ; tworzy i ustawia bity używając różnych reprezentacji danych
 == make bitset! #{00000000000000004000000004890080}
 ```
-
++
 Używając zakresu:
-
++
 Zakres jest zdefiniowany przez dwie wartości `char!` albo `integer!` , odseparowanymi przez myślnik.
-
++
 ```red
 >> make bitset! [#"0" - #"9" #"a" - #"z"]   ; tworzy bitset używając zakresu
 == make bitset! #{000000000000FFC0000000007FFFFFE0}
 ```
-
++
 Rozmiar bitsetów jest automatycznie rozszerzana, aby zmieścić podane dane. Rozmiar jest zaokrąglany do górnej granicy bajtu.
 
-=== To
+* `To`
++
 
 Konwersja wartości do `bitset!` przy użyciu `to` jest równoważna użyciu `make bitset!`, z wyjątkiem wartości `integer!`, które nie są akceptowalne.
 
@@ -83,7 +85,8 @@ Konwersja wartości do `bitset!` przy użyciu `to` jest równoważna użyciu `ma
 == make bitset! #{000000000000FFC0000000007FFFFFE0}
 ```
 
-=== Charset
+* `Charset`
++
 
 ```red
 >> source charset
@@ -94,20 +97,22 @@ charset: func ["Shortcut for `make bitset!`"
 ]
 ```
 
-`Charset` jest skrótem od `make bitset!`, z wyjątkiem wartości `binary!`, które nie są akceptowalne.
++
 
+`Charset` jest skrótem od `make bitset!`, z wyjątkiem wartości `binary!`, które nie są akceptowalne.
++
 ```red
 >> charset #{2A}
 *** Script Error: charset does not allow binary! for its spec argument
 *** Where: charset
 *** Stack: charset
 ```
-
++
 ```red
 >> charset [120 "hello" #"A"]   ; tworzy i ustawia bity używając różnych reprezentacji danych
 == make bitset! #{00000000000000004000000004890080}
 ```
-
++
 ```red
 >> charset [#"0" - #"9" #"a" - #"z"]   ; tworzy `bitset!` używając zakresów znaków
 == make bitset! #{000000000000FFC0000000007FFFFFE0}
@@ -115,43 +120,37 @@ charset: func ["Shortcut for `make bitset!`"
 
 == Dopełnienia
 
-Aby poradzić sobie z szerokim zakresem znaków Unicode, bity poza bitsetami są traktowane jako wirtualne bity
-więc mogą być testowane i ustawiane bez błędów. Rozmiar bitsetu będzie automatycznie powiększany w razie potrzeby.
-
-To jest nie wystarczające, aby poradzić sobie z bitsetami dla, na przykład, `każdego znaku Unicode oprócz cyfr`. Dla takiego przypadku jest możliwe zdefiniowanie dopełnienia bitsetu, który reprezentuje dopełnienie zakresu wymienionych bitów. Pozwala to na stworzenie bitsetu używając bardzo mało pamięci.
-
-
-Dopełnione bitsety mogą być stworzone przez dodanie `not` do specyfikacji.
+Dopełnienie wartości `bitset!` może być stworzone przez dodatnie `not` w bloku specyfikacji.
 
 ```red
-charset [not "0123456789"]   ; każde znaki oprócz cyfr
+charset [not "0123456789"]   ; wszystkie znaki oprócz cyfr
 == make bitset! [not #{000000000000FFC0}]
 ```
 
-`Complement` może też być użyte do dopełnienia bitsetu.
+Akcja `complement` może być użyta do utworzenia dopełnienia wartości `bitset!`.
 
 ```red
->> b: make bitset! 42
+>> make bitset! 42
 == make bitset! #{000000000000}
 
->> complemented-b: complement b
+>> complement make bitset! 42
 == make bitset! [not #{000000000000}]
 ```
+
+`Complement?` może być użyte, aby sprawdzić, czy dana wartość `bitset!` jest dopełnieniem.
 
 ```red
 >> b: complement make bitset! 42
 == make bitset! [not #{000000000000}]
-```
 
-`Complement?` może być użyte do sprawdzenia czy bitset jest dopełnieniem innego bitsetu.
-
-```red
->> complement? complemented-b
-== true
-
->> complement? b: complement make bitset! 42
+>> complement? b
 == true
 ```
+
+[NOTE]
+Aby poradzić sobie z szerokim zakresem znaków Unicode, bity poza wartościami `bitset!` są traktowane jako wirtualne bity
+więc mogą być testowane i ustawiane bez błędów. Rozmiar wartości `bitset!` będzie automatycznie powiększana w razie potrzeby.
+To jest nie wystarczające, aby poradzić sobie z wartościami `bitset!` dla, na przykład, `każdego znaku Unicode oprócz cyfr`. Dla takiego przypadku jest możliwe zdefiniowanie dopełnienia wartości `bitset!`, który reprezentuje dopełnienie zakresu wymienionych bitów. Pozwala to na stworzenie wartości `bitset!` używając bardzo mało pamięci.
 
 == Notacja ścieżki
 
@@ -196,7 +195,7 @@ Elementy, które znajdują się w obydwu zbiorach jednocześnie.
 ```
 
 
-Używając  `union` możesz złączyć dwa bitsety, aby stworzyć nowy bitset.
+Używając  `union` możesz złączyć dwie wartości `bitset!`, aby stworzyć nową wartość `bitset!`.
 
 ```
 digit: charset "0123456789"
