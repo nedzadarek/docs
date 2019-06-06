@@ -4,7 +4,7 @@
 
 == Streszczenie
 
-Wartości `block!` służą do reprezentacji danych albo kodu, który może być uruchomiony w dowolnym momencie. Jest typu `series!` bez ograniczeń typu wartości w nim przechowywanym.
+Wartości `block!` służą do reprezentacji kolekcji danych albo kodu, które mogą być uruchomione w dowolnym momencie. Jest typu `series!` bez ograniczeń typu wartości w nim przechowywanym.
 
 Wartości i wyrażenia w `block!` nie są automatycznie uruchomiane:
 
@@ -18,7 +18,7 @@ Wartości i wyrażenia w `block!` nie są automatycznie uruchomiane:
 
 Wartości typu `native!`, `do` i `reduce`, służą do uruchomienia wyrażeń zawartych w `block!`.
 
-* `do` uruchamia kod wewnątrz `block!`u i zwraca wartość ostatniego wyrażenia:
+* `do` uruchamia kod wewnątrz wartości `block!` i zwraca wartość ostatniego wyrażenia:
 
 ----
 >> do my-block
@@ -26,7 +26,7 @@ olleH
 == 42
 ----
 
-* `reduce` zwraca kopie `block!`u z każdym wyrażeniem uruchomionym:
+* `reduce` zwraca kopie wartości `block!` z każdym wyrażeniem uruchomionym:
 
 ----
 >> reduce my-block
@@ -39,34 +39,6 @@ olleH
 == Tworzenie
 
 Wartości `block!` mogą być stworzone za pomocą dosłownej składni, albo w czasie wykonywania za pomocą konstruktora `make` albo konwertera `to`.
-
-Aby stworzyć pusty `block!` z wstępnie przydzielonym miejscem na 10 elementów:
-
-----
->> make block! 10
-== []
-----
-
-Aby stworzyć `block!` o rozmiarze 10 z wstępnie przydzielonymi wartościami `none`:
-
-----
->> append/dup make block! 10 none 10
-== [none none none none none none none none none none]
-----
-
-Używanie konwertera `to`:
-
-----
->> to block! {one 2 "three" 4:00}
-== [one 2 "three" 4:00:00]
-
->> to block! "foo 1.23 me@me.com"
-== [foo 1.23 me@me.com]
-
->> to block! 42
-== [42]
-----
-
 
 == Dosłowna składnia
 
@@ -97,6 +69,36 @@ Poprawny zapis: `[42 print "foo"]`
 
 Niepoprawny zapis: `[42 pr int "foo"]`
 
+== Tworzenie w czasie wykonywania
+
+* `Make`
++
+Aby stworzyć pusty `block!` z wstępnie przydzielonym miejscem na 10 elementów:
+
+----
+>> make block! 10
+== []
+----
+
+Aby stworzyć `block!` o rozmiarze 10 z wstępnie przydzielonymi wartościami `none`:
+
+----
+>> append/dup make block! 10 none 10
+== [none none none none none none none none none none]
+----
+
+*`To`:
++
+----
+>> to block! {one 2 "three" 4:00}
+== [one 2 "three" 4:00:00]
+
+>> to block! "foo 1.23 me@me.com"
+== [foo 1.23 me@me.com]
+
+>> to block! 42
+== [42]
+----
 
 == Uzyskiwanie dostępu do elementów
 
