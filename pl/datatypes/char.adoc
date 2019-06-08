@@ -76,7 +76,7 @@ Nazwane znaki - składnia:
 
 ----
 #"^(<nazwa>)" albo #"^<symbol>"
-<nazwa> : nazwa z tabel "Nazwane znaki"
+<nazwa> : nazwa z tabeli "Nazwane znaki modyfikacji"
 <symbol> : symbol z tabeli "Nazwane znaki modyfikacji"
 ----
 
@@ -160,20 +160,57 @@ Pełny zakres matematycznych funkcji może być użyte z `char!`. Błąd `Math E
 
 *Przykłady*
 
-----
-#"a" + 1
+```red
+>> #"a" + 1
 == #"b"
-#"a" - 32
+
+>> #"a" - 32
 == #"A"
-#"a" * 256
+
+>> #"a" * 256
 == #"愀"
-#"a" - 98
+
+>> #"a" - 98
 *** Math Error: math or number overflow
 *** Where: -
 *** Stack:
+```
+[NOTE]
+Wynik operacji matematycznych będzie przekształcony do typu pierwszego argumentu.
+
+```red
+>> #"a" + 1
+== #"b"
+
+>> 1 + #"a"
+== 98
+
+>> #"a" - 32
+== #"A"
+
+>> 32 - #"a"
+== -65
+
+>> 256.00 * #"a"
+== 24832.0
+```
+
+== Uprzednio zdefiniowane słowa
 
 ----
-
+null             #"^@"
+newline          #"^/"
+slash            #"/"
+dbl-quote        #"^""
+space            #" "
+lf               #"^/"
+tab              #"^-"
+CR               #"^M"
+dot              #"."
+escape           #"^["
+sp               #" "
+comma            #","
+----
 
 == Inne funkcje związane z `char!`
 
