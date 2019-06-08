@@ -14,7 +14,7 @@ Wartości `datatype!` są predefiniowane i nie mogą być utworzone.
 
 == Dosłowna składnia
 
-Przez konwencje, `datatype!` jest wartością `word!` z wykrzyknikiem (`!`) na końcu.
+Przez konwencje, wartość `datatype!` jest wartością `word!` z wykrzyknikiem (`!`) na końcu.
 
 Przykłady: `bitset!`, `string!`, `time!`, `word!`
 
@@ -64,7 +64,7 @@ Użyj `type?`, aby zwrócić typ danych danej wartości.
 
 == Uprzednio zdefiniowane słowa
 
-Słowo `datatype!` odnosi się do wszystkich poprzednio zdefiniowanych datatypów. Listę datatypów można wyświetlić w konsoli przy użyciu `help datatype!`.
+Słowo `datatype!` odnosi się do wszystkich poprzednio zdefiniowanych datatypów. Listę wartości `datatype!` można wyświetlić w konsoli przy użyciu `help datatype!`.
 
 === Akcje
 
