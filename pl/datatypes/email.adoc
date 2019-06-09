@@ -1,0 +1,77 @@
+= Email! - typ danych
+:toc:
+:numbered:
+
+== Streszczenie
+
+Wartość `email!` umożliwia w bezpośredni sposób wyrażać adres e-mail, np: `foo@bar.net`
+
+`Email!` jest członkiem danych typesetów (zbiór typów): `any-string!`, `series!`
+
+== Tworzenie
+
+Wartości `email!` mogą być stworzone przez dosłowną składnie, albo podczas uruchamiania przy użyciu konstruktora `make` albo konwertera `to`.
+
+== Dosłowna składnia
+
+Jeden albo więcej znaków, następnie symbol `@`, kończąc na 0 lub więcej dodatkowych znaków.
+
+*Przykłady*
+
+```
+foo@bar.net
+gregg@red-lang.org
+g@
+```
+
+*Nieprawidłowe znaki*
+
+`%` `(` `)` `:` `"`
+
+== Tworzenie w czasie uruchomienia
+
+* `Make`
++
+```red
+>> f: make email! "foo"
+== foo
+
+>> type? f
+== email!
+```
+
+* `To`
++
+```red
+>> b: to email! 'bar
+== bar
+
+>> type? b
+== email!
+```
+
+== Porównania
+
+Wszystkie operatory porównań mogą być użyte z `email!`: `=, ==, <>, >, <, >=, &lt;=, =?`. Ponadto, `min` i `max` tez są wspierane.
+
+== Testing values
+
+Użyj `email?`, aby sprawdzić czy wartość jest typu `email!`.
+
+```red
+>> email? foo@bar.net
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? foo@bar.net
+== email!
+```
+
+== Uprzednio zdefiniowane słowa
+
+=== Funkcje
+
+`email?`, `suffix?`, `to-email`
