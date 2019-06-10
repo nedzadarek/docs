@@ -28,7 +28,7 @@ g@
 
 `%` `(` `)` `:` `"`
 
-== Tworzenie w czasie uruchomienia
+== Tworzenie w czasie wykonywania
 
 * `Make`
 +
