@@ -1,0 +1,25 @@
+= Event! - typ danych
+:toc:
+:numbered:
+
+== Streszczenie
+
+Wartość `event!` podobna do wartości `object!`. Reprezentuje zewnętrzną aktywność.
+
+Wartość `Event!` jest członkiem danych typesetów (zbiór typów): `default!`, `external!`
+
+== Tworzenie
+
+Wartości `event!` nie mogą być utworzone poprzez `make` albo `to`. Nie mają dosłownej formy. Pochodzą one od systemu operacyjnego i przez to są tylko do odczytu.
+
+Zobacz link:https://doc.red-lang.org/en/view.html#_events[dokumentacje view], aby zobaczyć więcej informacji na temat wartości `event!`.
+
+== Testowanie wartości
+
+Użyj `event?`, aby sprawdzić czy wartość jest typu `event!`.
+
+== Poprzednio zdefiniowane słowa
+
+=== Funkcje
+
+`event?`
