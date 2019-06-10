@@ -1,0 +1,84 @@
+= File! - typ danych
+:toc:
+:numbered:
+
+== Streszczenie
+
+Wartość `file!` reprezentuje nazwę pliku/katalogu albo ścieżkę dostępu.
+
+Wartość `file!` jest członkiem danych typesetów (zbiór typów): `any-string!`, `series!`
+
+== Tworzenie
+
+Wartości `file!` mogą być utworzone przez dosłowną składnie albo w czasie wykonywania używając konstruktora `make` czy też konwertera `to`.
+
+```red
+>> %file-literal
+== %file-literal
+```
+
+```red
+>> make file! 'foo
+== %foo
+
+>> make file! "bar"
+== %bar
+
+>> make file! [a long file name]
+== %alongfilename
+```
+
+```red
+>> to file! "foo"
+== %foo
+
+>> to file! [foo bar baz]
+== %foobarbaz
+```
+
+== Dosłowna składnia
+
+Znak procentu `%`, a potem 0 lub więcej znaków drukowalnych albo 0 lub więcej znaków zamieszczonych w `" "`.
+Znaki niedrukowalne muszą być wprowadzone przez użycie dodatkowego znaku procentu i wartości heksadecymalnej (`%<hex>`) jeśli nie są zamieszczone w `" "`.
+
+`%foo`
+
+`%foo%20bar`
+
+`%"foo bar baz"`
+
+== Porównania
+
+Wszystkie operatory porównań mogą być użyte z `file!`: `=, ==, <>, >, <, >=, &lt;=, =?`. Ponadto, `min` i `max` też są wspierane.
+
+
+== Testowanie wartości
+
+Użyj `file?`, aby sprawdzić czy wartość jest typu `file!`.
+
+```red
+>> file? %foo
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? %bar
+== file!
+```
+
+
+== Uprzednio zdefiniowane słowa
+
+=== Akcje
+
+`delete`, `modify`, `query`, `read`, `write`
+
+=== Funkcje
+
+`cd`, `change-dir`, `clean-path`, `dir?`, `dirize`, `do-file`, `do-thru`, `exists-thru?`, `file?`, `flip-exe-flag`, `list-dir`, `load`, `load-thru`, `make-dir`, `normalize-dir`, `path-thru`, `read-thru`, `request-dir`, `request-file`, `save`, `split-path`, `suffix?`, `to-file`, `to-red-file`
+
+=== Natywne funkcje
+
+`browse`, `call`, `checksum`, `dehex`
