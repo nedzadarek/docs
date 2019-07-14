@@ -1,0 +1,219 @@
+= Float! - typ danych
+:toc:
+:numbered:
+
+
+== Streszczenie
+
+Wartość `float!` reprezentuje 64-bitowy ujemny lub dodatni numer, która posiada wartość ułamkową.
+
+Wartości `float` są pomiędzy `-1.7E+308` i `+1.7E+308`. Zwracają `#INF` w przypadku przepełnienia.
+
+Dzielenie przez zero zwraca `1.#NaN`.
+
+Wartość `float!` jest członkiem danych typesetów (zbiór typów): `immediate!`, `number!`, `scalar!`
+
+== Tworzenie
+
+Wartość `float!` może być utworzona używając dosłownej składni albo w czasie wykonywania przy użyciu konstruktora `make` czy też konwertera `to`.
+
+== Dosłowna składnia
+
+0 albo więcej cyfr, następnie kropka (`.`), następnie 1 albo więcej cyfr.
+
+Przecinek może być użyty zamiast kropki.
+
+`123,4`
+
+[NOTE, caption=Note]
+
+Utworzona wartość zmieni wszystkie przecinki na kropkę.
+
+
+`+` albo `-` przed pierwszą cyfrą wskazuje na dodatnią albo ujemną wartość `float!`.
+
+`+123.4`
+
+`-123.4`
+
+Zera na początku są ignorowane.
+
+```red
+>> +00123.4
+== 123.4
+```
+
+Pojedynczy znak `'` jest używany do oddzielenia cyfr dla dużych liczb i może być użyty po pierwszej cyfrze.
+
+```red
+>> 60'000'12'3.4
+== 60000123.4
+```
+
+Pojedynczy znak `'` zaraz przed lub po separatorze dziesiętnym wywoła błąd.
+
+```red
+>> 60'000'123'.4
+*** Syntax Error: invalid integer! at "60'000'123'.4"
+*** Where: do
+*** Stack: load
+```
+
+```red
+>> 60'000'123.'4
+*** Syntax Error: invalid integer! at "60'000'123.'4"
+*** Where: do
+*** Stack: load
+```
+
+=== Tworzenie w czasie wykonywania
+
+* Dosłowna składnia
+
+```red
+>> 100.1
+== 100.1
+```
+
+* `make`
+
+```red
+>> make float! 1
+== 1.0
+```
+
+* `to`
+
+```red
+>> to float! 42
+== 42.0
+```
+
+[NOTE, caption=Note]
+
+Jeśli użyjemy wartości `any-list` z `make` albo `to`, wtedy wartość `any-list` musi zawierać dwie liczby. Wynik będzie operacją pomnożenia pierwszej liczby przez skróconą wartość drugiej spotęgowanej do 10. `pierwsza-liczba * (power 10 druga-liczba)`
+
+* `block`
+
+```red
+>> make float! [2 3]
+== 2000.0
+
+>> to float! [4 2]
+== 400.0
+```
+
+* `paren`
+
+```red
+>> make float! quote (2 3)
+== 2000.0
+
+>> to float! quote (4 2)
+== 400.0
+```
+
+* `hash`
+
+```red
+>> list: make hash! [2 3]
+== make hash! [2 3]
+
+>> to float! list
+== 2000.0
+
+>> list: make hash! [4 2]
+== make hash! [4 2]
+
+>> to float! list
+== 400.0
+```
+
+== Porównania
+
+Wszystkie operatory porównań mogą być użyte z `float!`: `=, ==, <>, >, <, >=, &lt;=, =?`. Ponadto, `min` i `max` też są wspierane.
+
+
+== Konwersja
+
+Wartość `float!` może być skonwertowana do `any-list!`, `binary!`, `char!`, `integer!`, `string!` albo `time!` przy użyciu konwertera `to`.
+
+Wartość `any-list!` musi zawierać dwie liczby. Wynik będzie operacją pomnożenia pierwszej liczby przez skróconą wartość drugiej spotęgowanej do 10. `pierwsza-liczba * (power 10 druga-liczba)`
+
+```red
+>> to float! [4 2]  ; 4 * (power 10 2)
+== 400.0
+```
+
+* `to binary!` zinterpretuje pierwsze 8 bajtów jako liczba zmiennoprzecinkowa. Jeśli będzie mniej niż 8 bajtów, bajty #{00} będą dodane na początek.
+
+```red
+>> to binary! 42.3
+== #{4045266666666666}
+```
+
+[NOTE, caption=Note]
+
+Cyfry po separatorze będą utracone po konwersji do `char!` albo `integer!`. Nie będzie miało miejsce żadne przybliżenie.
+
+```red
+>> to char! 123.4
+== #"{"
+
+>> to char! 123  ; to samo, ponieważ .4 jest odrzucone
+== #"{"
+
+>> to integer! 123.4
+== 123
+```
+
+* `to string!`
+
+```red
+>> to string! 123.4
+== "123.4"
+```
+
+* `to time!` zwraca sekundy i milisekundy.
+
+```red
+>> to time! 42.7
+== 0:00:42.7
+```
+
+Jeśli wartości `float!` i `integer!` będą użyte w jednym wyrażeniu to wynik będzie wartością `float!`.
+
+```red
+>> 123.4 * 42
+== 5182.8
+```
+
+== Testowanie wartości
+
+Użyj `float?`, aby sprawdzić czy wartość jest typu `float!` .
+
+```red
+>> float? 123.4
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? 123.4
+== float!
+```
+
+== Uprzednio zdefiniowane słowa
+
+=== Funkcje
+
+`acos`, `asin`, `atan`, `atan2`, `cos`, `distance?`, `float?`, `sin`, `sqrt`, `tan`, `to-float`
+
+=== Natywne funkcje
+
+`arccosine`, `arcsine`, `arctangent`, `arctangent2`, `as-pair`, `cosine`, `exp`, `log-10`, `log-2`, `log-e`, `sine`, `square-root`, `tangent`
+
+=== Operatory
+
+`**`
