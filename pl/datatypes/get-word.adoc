@@ -1,0 +1,76 @@
+= Get-word! - typ danych
+:toc:
+:numbered:
+
+== Streszczenie
+
+Wartości `get-word!` zwracają niewykonaną wartość `word!` z kontekstu, do którego jest ono związane.
+
+Wartość `get-word!` jest członkiem danych typesetów (zbiór typów): `any-word!`, `all-word!`, `immediate!`
+
+== Tworzenie
+
+Wartości `get-word!` mogą być stworzone przy użyciu dosłownej składni, albo w czasie wykonywania z użyciem konwertera `to` z danych wartości `datatype!`: `char!`, `logic!`, `string!`, `datatype!`, `issue!`, `refinement!` i `lit-word!`.
+
+```red
+>> to get-word! #"X"
+== :X
+
+>> to get-word! true
+== :true
+
+>> to get-word! "Hello"
+== :Hello
+
+>> to get-word! float!
+== :float!
+
+>> to get-word! #A42
+== :A42
+
+>> to get-word! /only
+== :only
+
+>> to get-word! 'foo
+== :foo
+```
+
+== Dosłowna składnia
+
+Dwukropek `:`, a następnie jedno lub więcej znaków z całego zakresu Unicode, z uwzględnieniem znaków przestankowych z podzbioru ASCII: `! & ' * + - . < = > ? _ | ~``
+
+Niepoprawne znaki to znaki kontrolne, znaki niedrukowalne i znaki przestankowe z podzakresu ASCII: `/ \ ^ , [ ] ( ) { } " # $ % @ : ;`
+
+Wartość `get-word!` nie może zaczynać się od cyfry.
+
+
+== Kroki ewaluacji
+
+* Znajdź kontekst, do którego słowo jest związane.
+
+* Zwróć wartość, do którego odsyła kontekst.
+
+** Jeśli wartość jest ze zbioru `any-function!`, nie wykonaj funkcji. Zwróć dosłowną wartość tej funkcji.
+
+
+== Testowanie wartości
+
+Użyj `get-word?`, aby sprawdzić czy wartość jest typu `get-word!`.
+
+```red
+>> get-word? first [:foo 'bar baz]
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? first [:foo 'bar baz]
+== get-word!
+```
+
+== Uprzednio zdefiniowane słowa
+
+=== Funkcje
+
+`to-get-word`
