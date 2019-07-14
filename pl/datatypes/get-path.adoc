@@ -1,0 +1,89 @@
+= Get-path! - typ danych
+:toc:
+:numbered:
+
+
+== Streszczenie
+
+Wartości `get-path!` zwracają wartości `path!` niewykonane.
+
+Wartości `get-path!` jest członkiem danych typesetów (zbiór typów): `any-block!`, `any-path!`, `series!`
+
+== Tworzenie
+
+Wartości `get-path!` mogą być utworzone w czasie wykonywania przy użyciu konstruktora  `make`, albo konwertera `to`.
+
+```red
+>> make get-path! [foo bar baz]
+== :foo/bar/baz
+```
+
+Możesz utworzyć pustą wartość `get-path!` o danym rozmiarze poprzez podanie wartości `integer!` jako argument do `make`:
+
+```red
+>> make get-path! 10
+== :
+```
+
+Konwerter `to`:
+
+```red
+>> to get-path! "foo bar baz"
+== :foo/bar/baz
+```
+
+== Dosłowna składnia
+
+BNF:
+
+```
+<get-path-literal>  ::= :<path-literal>
+
+<path-literal> ::= <głowa-ścieżki>/<selektor>
+<głowa-ścieżki>    ::= <word-literal> | <path-literal>
+<selektor> ::= <integer> | <word-literal> | :<word-literal> | <paren>
+```
+
+Parse:
+
+```
+get-path: [get-word! some selektor]
+selektor: [#"/" [integer! | word! | get-word! | paren!]]
+```
+
+głowa-ścieżki - datatype'y: link:get-word.adoc[get-word!], `get-path!`
+
+selektor - datatype'y: link:integer.adoc[integer!], link:word.adoc[word!], link:get-word.adoc[get-word!], link:paren.adoc[paren!]
+
+
+== Kroki ewaluacji
+
+Wartości `get-path!` mają takie same zasady jak `path!` dopóki selektor nie jest osiągnięty, po tym kroku wartość selektora jest zwracana bez ewaluacji.
+
+== Testowanie wartości
+
+Użyj `get-path?`, aby sprawdzić czy wartość jest typu `get-path!`.
+
+```red
+>> get-path? first [:foo/bar]
+== true
+
+>> get-path? quote :foo/bar
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? first [:foo/bar]
+== get-path!
+
+>> type? quote :foo/bar
+== get-path!
+```
+
+== Uprzednio zdefiniowane słowa
+
+=== Funkcje
+
+`get-path?`, `to-get-path`
