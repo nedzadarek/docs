@@ -1,0 +1,140 @@
+= Function! - typ danych
+:toc:
+:numbered:
+
+== Streszczenie
+
+Wartości `function!` reprezentują funkcje zdefiniowane przez użytkownika.
+
+`Function!` jest członkiem danych typesetów (zbiór typów): `any-function!`, `default!`
+
+== Tworzenie
+
+Wartości `function!` mogą być utworzone w czasie wykonywania przy użyciu `make` albo przy użyciu jednym z uprzednio zdefiniowanym słów: `func`, `has`, `does`, or `function`.
+
+=== Tworzenie w czasie wykonywania
+// gramatyka z  https://github.com/meijeru/red.specs-public/blob/master/specs.adoc#538-function
+
+* Składnia BNF:
++
+```
+<function> ::= make function! [<specyfikacja-funkcji> <ciało-funkcji>] | func <specyfikacja-funkcji> <ciało-funkcji> |
+               has [<argument>*] <ciało-funkcji> | does <ciało-funkcji> | function <specyfikacja-funkcji> <ciało-funkcji>
+
+<specyfikacja-funkcji> ::= [<docstring>° <specyfikacja-argumentu> <specyfikacja-zwracanego-typu>°]
+
+<docstring> ::= <string>
+
+<specyfikacja-argumentu> ::= <argument>* <opcjonalny-argument>*
+
+<argument> ::= <nazwa-argumentu> <dokumentacja-argumentu>° | <nazwa-argumentu> [<typeset-element>*] <dokumentacja-argumentu>°
+
+<nazwa-argumentu> ::= <word-literal> | '<word-literal> | :<word-literal>
+
+<dokumentacja-argumentu> ::= <string>
+
+<opcjonalny-argument> ::= <function-refinement> <dokumentacja-argumentu>° <argument>*
+
+<function-refinement> ::= /<word-literal>
+
+<specyfikacja-zwracanego-typu> ::= return: [<typeset-element>*] <return-doc>°
+
+<return-doc> ::= <string>
+
+<ciało-funkcji> ::= <block>
+```
+***
+
+*Przykłady*
+
+* `Make`
++
+```red
+>> double: make function! [[n [number!]] [n * 2]]
+== func [n [number!]][n * 2]
+```
+
+* `Func` jest odpowiednikiem `make function!`.
++
+```red
+>> double: func [n [number!]][n * 2]
+== func [n [number!]][n * 2]
+```
++
+Słowa po opcjonalnym refinement `/local` będą oznakowane jako lokalne do ciała funkcji.
+
+* `Has` jest odpowiednikiem `func` z refinement `/local`.
++
+```red
+>> fourty-two: has [value][value: 42 print value]
+== func [/local value][value: 42 print value]
+```
+
+* `Does` jest odpowiednikiem `func` bez argumentu.
++
+```red
+>> h: does [print "Hi"]
+== func [][print "Hi"]
+```
+
+* `Function` jest odpowiednikiem `func`, ale oznaczy każde wartości `set-word!` i słowa `foreach`, `remove-each` i `repeat` jako lokalne w stosunku do ciała funkcji.
+
++
+```red
+>> double: function [n [number!]][val: "Result is" print [val n * 2]]
+== func [n [number!] /local val][val: "Result is" print [val n * 2]]
+
+>> double 9
+Result is 18
+```
++
+Słowo `val` pozostaje lokalne do funkcji i nie może być odczytane przy użyciu kontekstu `system/words`.
++
+```red
+>> val
+*** Script Error: val has no value
+*** Where: catch
+*** Stack:
+```
+
++
+Słowa po refinement `/extern` będą dostępne przy użyciu kontekstu `system/words`.
++
+```red
+>> double: function [n [number!] /extern val][val: "Result is" print [val n * 2]
+== func [n [number!]][val: "Result is" print [val n * 2]]
+
+>> double 9
+Result is 18
+
+>> val
+== "Result is"
+```
+
+== Konwersja
+
+Konwersja nie jest wspierana przez wartości `function!`.
+
+== Porównania
+
+Wartości `function!` mogą być porównane ze względu na identyczność i równość używając `same?`, `==`, `equal?`, `strict-equal?`, `not-equal?`, `<>`.
+
+== Testowanie wartości
+
+Użyj `function?`, aby sprawdzić czy wartość jest typu `function!`.
+
+```red
+>> function? :double
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? :double
+== function!
+```
+
+== Uprzednio zdefiniowane słowa
+
+Dostęp do uprzednio zdefiniowanych wartości `function!` mogą być odczytane poprzez wpisanie `help function!` w konsoli Red.
