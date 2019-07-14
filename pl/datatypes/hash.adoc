@@ -1,0 +1,140 @@
+= Hash! - typ danych
+:toc:
+:numbered:
+
+// po części utworzone na podstawie https://www.red-lang.org/search/label/hash
+
+== Streszczenie
+
+Wartości `hash!` oferują interfejs podobny do wartości `block!` z szybkim wyszukiwaniem.
+
+Funkcja haszująca jest przerobioną implementacją algorytmu link:https://github.com/aappleby/smhasher[MurmurHash3].
+
+`Hash!` jest członkiem danych typesetów (zbiór typów): `default!`, `series!`, `any-block!`, `any-list!`
+
+== Tworzenie
+
+Wartości `hash!` mogą być utworzone podczas wykonywania przy użyciu konstruktora `make`, albo konwertera `to`.
+
+=== Tworzenie w czasie wykonywania
+
+```red
+>> list: make hash! [a 123 "hello" b c 789]
+== make hash! [a 123 "hello" b c 789]
+```
+
+```red
+>> list: to hash! [a 123 "hello" b c 789]
+== make hash! [a 123 "hello" b c 789]
+```
+
+== Dostęp do elementów wartości `hash!`
+
+=== Przy użyciu notacja `path!`
+
+Dostęp do wartości, używając `c` jako klucza.
+
+```red
+>> list/c
+== 789
+```
+
+Zapis wartości, używając `c` jako klucza.
+
+```red
+>> list/c: 42
+== 42
+
+>> list
+== make hash! [a 123 "hello" b c 42]
+```
+
+=== Przy użyciu `find`
+
+```red
+>> find list 'b
+== make hash! [b c 42]
+```
+
+=== Przy użyciu `select`
+
+```red
+>> dict: make hash! [a 123 b 456 c 789]
+== make hash! [a 123 b 456 c 789]
+
+>> select dict 'c
+== 789
+
+>> dict: make hash! [2 123 4 456 6 2 8 789]
+== make hash! [2 123 4 456 6 2 8 789]
+
+>> select/skip dict 2 2
+== 123
+```
+
+== Operacja na zbiorach
+
+Operacje na zbiorach danych zgodne z wartością `hash!`: `difference`, `exclude`, `intersect`, `union`, `unique`
+
+```red
+>> dict1: make hash! [a 123 b 456 c 789]
+== make hash! [a 123 b 456 c 789]
+
+>> dict2: make hash! [2 123 4 456 6 2 8 789]
+== make hash! [2 123 4 456 6 2 8 789]
+```
+
+```red
+>> difference dict1 dict2
+== make hash! [a b c 2 4 6 8]
+```
+
+```red
+>> exclude dict1 dict2
+== make hash! [a b c]
+```
+
+```red
+>> intersect dict1 dict2
+== make hash! [123 456 789]
+```
+
+```red
+>> union dict1 dict2
+== make hash! [a 123 b 456 c 789 2 4 6 8]
+```
+
+```red
+>> unique dict2
+== make hash! [2 123 4 456 6 8 789]
+```
+
+== Porównania
+
+Wszystkie operatory porównań mogą być użyte z `hash!`: `=, ==, <>, >, <, >=, &lt;=, =?`. Ponadto, `min` i `max` też są wspierane.
+
+== Testowanie wartości
+
+Użyj `hash?`, aby sprawdzić czy wartość jest typu `hash!`.
+
+```red
+>> hash? dict1
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? dict2
+== hash!
+```
+
+== Uprzednio zdefiniowane słowa
+
+=== Funkcje
+
+`average`, `hash?`, `path-thru`, `sum`, `to-hash`
+
+=== Natywne funkcje
+
+`checksum`, `difference`, `exclude`, `extend`, `intersect`, `union`, `unique`
