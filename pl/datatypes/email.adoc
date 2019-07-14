@@ -50,6 +50,39 @@ g@
 == email!
 ```
 
+== Akcesory ścieżki
+
+Akcesory ścieżki dają możliwość w wygodny sposób odczyt albo zapis nazwy użytkownika albo nazwy hosta wartości `email!`.
+
+=== /user
+
+```red
+>> e: me@me.net
+== me@me.net
+
+>> e/user
+== "me"
+
+>> e/user: "you"
+== "you"
+
+>> e
+== you@me.net
+```
+
+=== /host
+
+```red
+>> e/host
+== "me.net"
+
+>> e/host: "red-lang.org"
+== "red-lang.org"
+
+>> e
+== you@red-lang.org
+```
+
 == Porównania
 
 Wszystkie operatory porównań mogą być użyte z `email!`: `=, ==, <>, >, <, >=, &lt;=, =?`. Ponadto, `min` i `max` tez są wspierane.
