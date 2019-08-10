@@ -70,12 +70,16 @@ Pojedynczy znak `'` zaraz przed lub po separatorze dziesiętnym wywoła błąd.
 
 * Dosłowna składnia
 
++
+
 ```red
 >> 100.1
 == 100.1
 ```
 
 * `make`
+
++
 
 ```red
 >> make float! 1
@@ -84,6 +88,8 @@ Pojedynczy znak `'` zaraz przed lub po separatorze dziesiętnym wywoła błąd.
 
 * `to`
 
++
+
 ```red
 >> to float! 42
 == 42.0
@@ -91,9 +97,11 @@ Pojedynczy znak `'` zaraz przed lub po separatorze dziesiętnym wywoła błąd.
 
 [NOTE, caption=Note]
 
-Jeśli użyjemy wartości `any-list` z `make` albo `to`, wtedy wartość `any-list` musi zawierać dwie liczby. Wynik będzie operacją pomnożenia pierwszej liczby przez skróconą wartość drugiej spotęgowanej do 10. `pierwsza-liczba * (power 10 druga-liczba)`
+Jeśli użyjemy wartości `any-list` z `make` albo `to`, wtedy wartość `any-list` musi zawierać dwie liczby. Wynik będzie `pierwsza-liczba * (10 ** druga-liczba)`
 
 * `block`
+
++
 
 ```red
 >> make float! [2 3]
@@ -105,6 +113,8 @@ Jeśli użyjemy wartości `any-list` z `make` albo `to`, wtedy wartość `any-li
 
 * `paren`
 
++
+
 ```red
 >> make float! quote (2 3)
 == 2000.0
@@ -114,6 +124,8 @@ Jeśli użyjemy wartości `any-list` z `make` albo `to`, wtedy wartość `any-li
 ```
 
 * `hash`
+
++
 
 ```red
 >> list: make hash! [2 3]
@@ -138,7 +150,7 @@ Wszystkie operatory porównań mogą być użyte z `float!`: `=, ==, <>, >, <, >
 
 Wartość `float!` może być skonwertowana do `any-list!`, `binary!`, `char!`, `integer!`, `string!` albo `time!` przy użyciu konwertera `to`.
 
-Wartość `any-list!` musi zawierać dwie liczby. Wynik będzie operacją pomnożenia pierwszej liczby przez skróconą wartość drugiej spotęgowanej do 10. `pierwsza-liczba * (power 10 druga-liczba)`
+Wartość `any-list!` musi zawierać dwie liczby. Wynik będzie `pierwsza-liczba * (power 10 druga-liczba)`
 
 ```red
 >> to float! [4 2]  ; 4 * (power 10 2)
@@ -147,14 +159,17 @@ Wartość `any-list!` musi zawierać dwie liczby. Wynik będzie operacją pomno�
 
 * `to binary!` zinterpretuje pierwsze 8 bajtów jako liczba zmiennoprzecinkowa. Jeśli będzie mniej niż 8 bajtów, bajty #{00} będą dodane na początek.
 
++
+
 ```red
 >> to binary! 42.3
 == #{4045266666666666}
 ```
 
-[NOTE, caption=Note]
 
 Cyfry po separatorze będą utracone po konwersji do `char!` albo `integer!`. Nie będzie miało miejsce żadne przybliżenie.
+
++
 
 ```red
 >> to char! 123.4
@@ -175,6 +190,8 @@ Cyfry po separatorze będą utracone po konwersji do `char!` albo `integer!`. Ni
 ```
 
 * `to time!` zwraca sekundy i milisekundy.
+
++
 
 ```red
 >> to time! 42.7
