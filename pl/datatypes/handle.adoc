@@ -1,0 +1,24 @@
+= Handle! - typ danych
+:toc:
+:numbered:
+
+== Streszczenie
+
+Wartość `handle!` reprezentują identyfikatory, które służą do interakcji z systemem operacyjnym.
+
+`Handle!` jest członkiem danych typesetów (zbiór typów): `default!`, `immediate!`
+
+== Tworzenie
+
+Wartości `handle!` nie mogą być utworzone. Służą do komunikacji z systemem operacyjnym i mogą być tylko reprezentowane przez słowa, które są argumentami do funkcji obsługujących taką komunikację.
+
+== Testowanie wartości
+
+Użyj `handle?`, aby sprawdzić czy wartość jest typu `handle!`.
+
+
+== Uprzednio zdefiniowane słowa
+
+=== Funkcje
+
+`handle?`
