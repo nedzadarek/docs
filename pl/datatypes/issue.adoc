@@ -1,0 +1,75 @@
+= Issue! - typ danych
+:toc:
+:numbered:
+
+== Streszczenie
+
+Wartości `issue!` używane so do reprezentowania hashtagów, słów kluczowych oraz identyfikatorów (np. numery seryjne), które nie zawierają znaków niedrukowalnych.
+
+Wartości `issue!` jest członkiem danych typesetów (zbiór typów): `all-word!`, `immediate!`
+
+
+== Tworzenie
+
+Wartości `issue!` mogą być utworzone przy użyciu dosłownej składni, albo podczas wykonywania przy użyciu konwertera `to`.
+
+----
+>> to issue! "123.42-xxx"
+== #123.42-xxx
+
+>> to issue! #"R"
+== #R
+----
+
+
+== Dosłowna składnia
+
+Znak `#`, a potem sekwencja znaków. Wartości `issue!` są przerywane po nastąpieniu znaku niedrukowalnego, średnika, albo ogranicznika wskazującego na początek nowej wartości (np. `[` zaczyna wartość `block!`)
+
+`#555-555-5555`
+
+`#CODE`1.2.3--42-8`
+
+`#ABC-123-xyx`
+
+
+== Porównania
+
+Wszystkie operatory porównań mogą być użyte z `issue`: `=, ==, <>, >, <, >=, &lt;=, =?`.
+
+
+== Testowanie wartości
+
+Użyj `issue?`, aby sprawdzić czy wartość jest typu `issue!`.
+
+----
+>> issue? #ABC-123-xyx
+== true
+
+>> my-word: #X11'xyz
+== #X11'xyz
+
+>> issue? my-word
+== true
+----
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+----
+>> type? #ABC-123-xyx
+== issue!
+
+>> type? my-word
+== issue!
+----
+
+
+== Uprzednio zdefiniowane słowa
+
+=== Funkcje
+
+`hex-to-rgb`, `issue?`, `to-issue`
+
+=== Funkcje natywne
+
+`to-hex`
