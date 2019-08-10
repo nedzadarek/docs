@@ -1,0 +1,84 @@
+= Integer! - typ danych
+:toc:
+:numbered:
+
+== Streszczenie
+
+Wartości `integer!` to 32-bitowe numery bez separatora dzietnego. Są z zakresu od  `-2147483648` do `2147483647`.
+
+Przez projekt wartości `integer!` nie są automatycznie konwertowane do `float!` w przypadku przepełnienia.
+
+Wartości `integer!` jest członkiem danych typesetów (zbiór typów): `immediate!`, `number!`, `scalar!`
+
+== Dosłowna składnia
+
+Sekwencja cyfr bez separatora dziesiętnego.
+
+`1234`
+
+`+` albo `-` przed pierwszą cyfrą oznacza dodatnie albo ujemne liczby.
+
+`-1234`
+
+`+1234`
+
+Zera na początku są ignorowane.
+```red
+>> +001234
+== 1234
+```
+
+Apostrof `'` jest użyty do separator dużych liczb i może być użyty wszędzie po pierwszej cyfrze.
+
+```red
+60'000'000
+```
+
+`'` po ostatniej cyfrze spowoduje błąd:
+
+```red
+>> 60'000'000'
+*** Syntax Error: invalid integer! at "60'000'000'"
+*** Where: do
+*** Stack: load
+```
+
+== Porównania
+
+Wszystkie operatory mogą być użyte z `integer!`: `=, ==, <>, >, <, >=, &lt;=, =?`. W dodatku, `min` i `max` też są wspierane.
+
+
+== Konwersja
+
+Wartość `integer!` może przekonwertowana w czasie wykonywania do `float!` albo `string!` przy użyciu konwertera `to`.
+
+```red
+>> to float! 42
+== 42.0
+
+>> to string! 42
+== "42"
+```
+
+Jeżeli wartość `integer!` i `float!` są w jednym wyrażeniu to rezultat będzie wartością `float!`.
+
+```red
+>> 42 * 42.0
+== 1764.0
+```
+
+== Testowanie wartości
+
+Użyj `integer?`, aby sprawdzić czy wartość jest typu `integer!` .
+
+```red
+>> integer? 42
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? 42
+== integer!
+```
