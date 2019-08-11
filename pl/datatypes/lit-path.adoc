@@ -1,0 +1,100 @@
+= Lit-path! - typ danych
+:toc:
+:numbered:
+
+
+== Streszczenie
+
+Wartość `lit-path!` nieobliczoną ("zacytowaną") wartością `path!`.
+
+Wartość `lit-path!` rozłoży się do wartości `path!` kiedy zostanie wykonana, np. podczas wprowadzania do Red REPL.
+
+Wartość `lit-path!` jest członkiem danych typesetów (zbiór typów): `any-block!`, `any-path!`, `series!`
+
+== Tworzenie
+
+Wartości `lit-path!` mogą być utworzone przy pomocy `quote` i dosłownej składni, albo w czasie wykonywania przy użyciu konstruktora `make` lub konwertera `to`.
+
+```red
+>> 'foo/bar/baz
+== foo/bar/baz
+
+>> type? 'foo/bar/baz
+== path!
+```
+
+```red
+>> quote 'foo/bar/baz
+== 'foo/bar/baz
+
+>> type? quote 'foo/bar/baz
+== lit-path!
+```
+
+```red
+>> make lit-path! [foo bar baz]
+== 'foo/bar/baz
+```
+
+```red
+>> to lit-path! [foo bar baz]
+== 'foo/bar/baz
+```
+
+Możesz utworzyć pustą wartość `lit-path!` danego rozmiaru podając wartość `integer!` do `make`:
+
+```red
+>> make lit-path! 10
+== '
+```
+
+== Dosłowna składnia
+
+BNF:
+
+```
+<lit-path-literal> ::= '<path-literal>
+
+<path-literal> ::= <path-head>/<selector>
+<path-head>    ::= <word-literal> | <path-literal>
+<selector> ::= <integer> | <word-literal> | :<word-literal> | <paren>
+```
+
+Parse:
+```
+lit-path: [lit-word! some selector]
+selector: [#"/" [integer! | word! | get-word! | paren!]]
+```
+
+Path-head datatypes: link:lit-word.adoc[lit-word!], link:lit-path.adoc[lit-path!]
+
+Selector datatypes: link:integer.adoc[integer!], link:word.adoc[word!], link:get-word.adoc[get-word!], link:paren.adoc[paren!]
+
+
+== Testowanie wartości
+
+Użyj `lit-path?`, aby sprawdzić czy wartość jest typu `lit-path!`.
+
+```red
+>> lit-path? first ['foo/bar]
+== true
+
+>> lit-path? quote 'foo/bar
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? first ['foo/bar]
+== lit-path!
+
+>> type? quote 'foo/bar
+== lit-path!
+```
+
+== Poprzedni zdefiniowane słowa
+
+=== Funkcje
+
+`lit-path?`, `to-lit-path`
