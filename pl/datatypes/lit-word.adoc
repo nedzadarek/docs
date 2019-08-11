@@ -1,0 +1,77 @@
+= Lit-word! - typ danych
+:toc:
+:numbered:
+
+== Streszczenie
+
+Wartość `lit-word!` nieobliczoną wartością `word!`. Posiada dosłowną wartość siebie.
+
+Wartość `lit-word!` rozłoży się do wartości `word!` kiedy zostanie wykonana, np. podczas wprowadzania do Red REPL.
+
+Wartość `lit-word!` jest członkiem danych typesetów (zbiór typów): `any-word!`, `all-word!`, `immediate!`
+
+== Tworzenie
+
+Wartości `lit-word!` mogą być utworzone przy użyciu dosłownej składni albo podczas wykonywania przy użyciu konwertera `to` z datatype'ów: `char!`, `logic!`, `string!`, `datatype!`, `issue!` i `refinement!`.
+
+```red
+>> 'test
+== test
+
+>> type? 'test
+== word!
+```
+
+```red
+>> to lit-word! #"X"
+== 'X
+
+>> to lit-word! true
+== 'true
+
+>> to lit-word! "Hello"
+== 'Hello
+
+>> to lit-word! float!
+== 'float!
+
+>> to lit-word! #A42
+== 'A42
+
+>> to lit-word! /only
+== 'only
+```
+
+== Dosłowna składnia
+
+Apostrof `'`, a potem jedno lub więcej znaków z całego zakresu Unicode, włączając znaki interpunkcyjne z podzakresu ASCII: `! & ' * + - . < = > ? _ | ~``
+
+Nielegalne znaki to znaki kontrolne, znaki niedrukowalne i znaki interpunkcyjne z podzakresu ASCII: `/ \ ^ , [ ] ( ) { } " # $ % @ : ;`
+
+Wartość `lit-word!` nie może zaczynać się od cyfry.
+
+== Porównania
+
+Wszystkie operatory porównań mogą być użyte z `lit-word!`: `=, ==, <>, >, <, >=, &lt;=, =?`.
+
+== Testowanie wartości
+
+Użyj `lit-word?`, aby sprawdzić czy wartość jest typu `lit-word!`.
+
+```red
+>> lit-word? first ['foo bar baz]
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? first ['foo bar baz]
+== lit-word!
+```
+
+== Poprzednio zdefiniowane słowa
+
+=== Funkcje
+
+`to-lit-word`
