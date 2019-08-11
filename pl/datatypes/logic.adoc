@@ -1,0 +1,87 @@
+= Logic! - typ danych
+:toc:
+:numbered:
+
+
+== Streszczenie
+
+`logic!` datatype reprezentuje wartości boolean `true` i `false`.
+
+`Logic!` jest członkiem danych typesetów (zbiór typów): `immediate!`
+
+== Tworzenie
+
+Wartość `logic!` mogą być utworzone przy użyciu dosłownej składni, albo podczas wykonywania przy użyciu konstruktora `make` lub konwertera `to`.
+
+`to logic!` zmienia do `true` dla każdej wartości oprócz `false` i `none`.
+
+```red
+>> to logic! 'hi
+== true
+
+>> to logic! 1
+== true
+
+>> to logic! 0
+== true
+
+>> to logic! none
+== false
+
+>> to logic! false
+== false
+```
+
+[NOTE]
+Dla wsparcia logiki boolowskiej, wartości `true` i `false` mogą być utworzone z 1 i 0 przy użyciu `make`.
+
+```red
+>> make logic! 1
+== true
+
+>> make logic! 0
+== false
+
+>> make integer! true
+== 1
+
+>> make integer! false
+== 0
+```
+
+== Dosłowna składnia
+
+Uprzednio zdefiniowane słowa `true` i `false`, albo serializowana syntaktyka:
+
+```red
+#[true]
+
+#[false]
+```
+
+== Testowanie wartości
+
+Użyj `logic?`, aby sprawdzić czy wartość jest typu `logic!`.
+
+```red
+>> logic? on
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? false
+== logic!
+```
+
+
+== Poprzednio zdefiniowane słowa
+
+`true`, `yes`, `on`
+
+`false`, `no`, `off`
+
+=== Funkcje
+
+`to-logic`
