@@ -1,0 +1,268 @@
+= Map! - typ danych
+:toc:
+:numbered:
+
+== Streszczenie
+
+Wartość `map!` reprezentuje tablice asocjacyjne (pary klucz-wartość). Zapewnia szybki odczyt (wewnętrznie używając tablicy haszującej). W przeciwieństwie do wartości `hash!`, wartość `map` nie jest wartością `series!`, więc nie posiada offsetu czy pozycji. Pojęciowo, wartość `map!` jest pomiędzy wartością `hash!` a `object!`.
+
+
+== Dosłowna składnia
+
+----
+#(<klucz> <wartość>...)
+
+<klucz>   : zahaszowany klucz, zezwolone typy danych: scalar!, all-word!, any-string!
+<wartość> : wartość `any-type!``
+----
+
+
+== Składnia tworzenia
+
+----
+make map! <spec>
+
+<spec> : wartość `block!` z parami klucz-wartość albo wartość `integer!`
+----
+
+Jeżeli argument _spec_ jest wartością `integer!`, wtedy pusta wartość `map!` jest utworzona z uprzednio ulokowanymi miejscami (zazwyczaj, aby wprowadzić dane dynamicznie).
+
+[NOTE]
+====
+* ciało oraz specyfikacja wartości `map!` musi zawierać parzystą liczb elementów, w przeciwnym razie będzie wywołany błąd.
+* wartości nie są *zredukowane*, więc budująca składnia jest potrzebna dla niektórych wartości, jak `logic!`.
+====
+
+Przykłady:
+
+----
+#(a: 1 b: 2)
+== #(
+    a: 1
+    b: 2
+)
+
+make map! [a 1 'b 2 "c" 3]
+== #(
+    a: 1
+    b: 2
+    "c" 3
+)
+----
+
+Jeśli klucz jest wartością *any-word!*, wtedy klucz będzie przekonwertowany do wartości *set-word!*, aby wartość `map!` wyglądała jako klucze z wartościami do nich przypisanymi. Pomimo tego, w celu dostępu do wartości nie musimy podawać wartości `set-word!`. Dla celów praktycznych (prostsze tworzenie, szczególnie w ścieżkach - `(lit/get/set-)path`). Podobnie, `keys-of` reflektor (opisane w sekcji "Mechanizmy refleksji"), zwrócą wartości `word!` zamiast `set-word!`, ponieważ upraszcza to dalszą przetwarzanie(szczególnie operacje dopasowania są prostsze z wartościami `word!` zamiast `set-word!`).
+
+[NOTE]
+====
+* Tak jak wartość `hash!` i `block!`, wartość `map!` domyślnie **zachowa wielkość liter** jednak **wielkość liter nie jest ważna podczas wyszukiwania**.
+* Wszystkie klucze są dogłębnie kopiowane podczas tworzenia wartości `map!`.
+* Wartości `series!` nie są kopiowane podczas tworzenia. Wybór należy do użytkownika (optymalizuje to środki dla powszechnych użyć)
+====
+
+Innym sposobem na utworzenie wartości `map!` jest użycie akcji `copy` (ang. kopiuj) na innej wartości `map!`
+
+
+== Dostęp do wartości
+
+Używając ścieżek:
+
+----
+<map>/<klucz>
+get '<map>/<klucz>
+
+<map> : słowo wskazujące na wartość `map!`
+<klucz> : klucz
+----
+
+Używając akcji `select` (wybierz):
+
+----
+select <map> <key>
+
+<map> : wartość `map!`
+<key> : każda legalna wartość dla klucza
+----
+
+Wszystkie powyżej przedstawione metody dostępu są niewrażliwe na wielkość liter. W celu wyszukiwania ze względu na wielkość liter musimy użyć `/case` refinement:
+
+----
+get/case '<map>/<klucz>
+select/case <map> <klucz>
+----
+
+Próba dostępu do wartości, gdy klucz nie jest zdefiniowany:
+
+* wywoła błąd jeśli notacja ścieżki jest użyta.
+* zwróci wartość `none` jeżeli `select` jest użyty.
+
+Przykłady:
+
+----
+m: #(Ab: 2 aB: 5 ab: 10)
+m/ab
+== 2
+select m 'aB
+== 2
+get/case 'm/aB
+== 5
+select/case m 'ab
+== 10
+select m 'x
+== none
+----
+
+
+== Zmienianie kluczy i wartości
+
+Przy użyciu notacji ścieżki:
+
+----
+<map>/<klucz>: <wartość>
+set '<map>/<klucz> <wartość>
+
+<map>   : słowo skazujące na wartość `map!`
+<klucz>   : klucz do wyboru wartości
+<wartość> : każda wartość
+----
+
+Przy użyciu modyfikującej akcji:
+
+----
+put <map> <key> <value>
+
+<map> : map value
+<key> : any valid key value to select a value in the map
+----
+
+Wprowadzanie wielu zmian:
+
+----
+extend <map> <spec>
+
+<map>  : wartość `map!`
+<spec> : wartość `block!`` z parami nazwa-wartość (jedna albo więcej par)
+----
+
+Wszystkie powyższe wymienione operacje odczytu są niewrażliwe na wielkość liter. Jeżeli chcemy, aby operacje były wrażliwe na wielkość liter, musimy użyć refinement `/case`:
+
+----
+set/case '<map>/<key> <wartość>
+put/case <map> <key> <wartość>
+extend/case <map> <wartość>
+----
+
+Funkcja natywna `extend` akceptuje wiele par w tym samym czasie, więc jest wygodna do wprowadzania wielu zmian jednocześnie.
+
+[NOTE]
+====
+* zapis klucza, który nie istnieje **po prostu go utworzy**.
+* dodawanie klucza, który już istnieje zmieni wartość przypisaną do tego klucza, a nie utworzy nowej pary (domyślnie nie wrażliwe na wielkość liter).
+====
+
+Przykłady:
+
+----
+m: #(Ab: 2 aB: 5 ab: 10)
+m/ab: 3
+m
+== #(
+    Ab: 3
+    aB: 5
+    ab: 10
+)
+
+put m 'aB "hello"
+m
+== #(
+    Ab: "hello"
+    aB: 5
+    ab: 10
+)
+
+set/case 'm/aB 0
+m
+== #(
+    Ab: "hello"
+    aB: 0
+    ab: 10
+)
+set/case 'm/ab 192.168.0.1
+== #(
+    Ab: "hello"
+    aB: 0
+    ab: 192.168.0.1
+)
+
+m: #(%cities.red 10)
+extend m [%cities.red 99 %countries.red 7 %states.red 27]
+m
+== #(
+    %cities.red 99
+    %countries.red 7
+    %states.red 27
+)
+----
+
+== Usuwanie kluczy
+
+Użyj `remove/key`, aby usunąć parę klucz-wartość z wartości `map!`, zwracając wartość `map!`. Wyszukiwanie klucza w tym przypadku jest zawsze wrażliwe na wielkość liter.
+
+Przykłady:
+
+----
+m: #(a: 1 b 2 "c" 3 d: 99)
+m
+== #(
+    a: 1
+    b: 2
+    "c" 3
+    d: 99
+)
+remove/key m 'b
+== #(
+    a: 1
+    "c" 3
+    d: 99
+)
+----
+
+Jest możliwe, aby usunąć wszystkie kluczy używając akcji `clear`:
+
+----
+clear #(a 1 b 2 c 3)
+== #()
+----
+
+
+== Mechanizmy refleksji
+
+* `find` sprawdza czy klucz jest zdefiniowany w wartości `map!` i zwraca pierwszy odnaleziony klucz. W przeciwnym wypadku zwróci `none`. Użyj `/case` dla wyszukiwania ze względu na wielkość liter.
+
+ find #(a 123 b 456) 'b
+ == b
+
+ find #(a 123 A 456) 'A
+ == a
+
+ find/case #(a 123 A 456) 'A
+ == A
+
+* `length?` zwraca liczbę par klucz-wartość w wartości `map!`.
+
+ length? #(a 123 b 456)
+ == 2
+
+* `keys-of` zwraca listę kluczy jako wartość `block!` (wartości `set-word!` są konwertowane do `word!`).
+
+ keys-of #(a: 123 b: 456)
+ == [a b]
+
+* `values-of` zwraca listę wartości jako wartość `block!`.
+
+ values-of #(a: 123 b: 456)
+ == [123 456]
+
+* `body-of` zwraca wszystkie pary klucz-wartość jako wartość `block!`.
+
+ body-of #(a: 123 b: 456)
+ == [a: 123 b: 456]
