@@ -1,0 +1,73 @@
+= Op! - typ danych
+:toc:
+:numbered:
+
+== Streszczenie
+
+Wartości `op!` są funkcjami infiksowymi z dwoma argumentami utworzone z wartości  `native!`, `action!`, `function!` albo `routine!`.
+
+Wartości `op!` mają pierwszeństwo podczas wykonywania przed innymi funkcjami i wartościami `set-word!`. Nie mogą zawierać opcjonalnych argumentów.
+
+Wartość `op!` jest członkiem danych typesetów (zbiór typów): `any-function!`, `default!`
+
+== Tworzenie
+
+Wartości `op!` mogą być utworzone podczas wykonywania przy użyciu konstruktora `make`
+
+=== Tworzenie w czasie wykonywania
+
+```
+<op> ::= make op! <funkcja-prefiksowa>
+```
+
+*Przykłady*
+
+Logiczne operatory `or` i `and`.
+
+```red
+>> ||: make op! func [a b][any [a b]]  ; zwraca pierwszą wartość, która jest prawdziwa
+== make op! [[a b]]
+
+>> 1 || 2
+== 1
+
+>> false || 2
+== 2
+
+>> &&: make op! func [a b][all [a b]]  ; jeżeli wszystkie wartości są prawdziwe, zwróć `true`; w innym wypadku `none`
+== make op! [[a b]]
+
+>> 1 && 2
+== 2
+
+>> false && 2
+== none
+```
+
+== Konwersja
+
+Wartości `op!` nie wspierają konwersji.
+
+== Porównania
+
+Wartości `op!` mogą by porównane ze względu na identyczność i równość przy użyciu `same?`, `==`, `equal?`, `strict-equal?`, `not-equal?`, `<>`.
+
+== Testowanie wartości
+
+Użyj `op?`, aby sprawdzić czy wartość jest typu `op!`.
+
+```red
+>> op? :&&
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? :||
+== op!
+```
+
+== Poprzednio zdefiniowane słowa
+
+Wartości `op!` mogą być przeglądnięte, gdy wpiszemy `help op!` w konsoli Red.
