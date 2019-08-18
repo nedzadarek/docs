@@ -1,0 +1,57 @@
+= None! - typ danych
+:toc:
+:numbered:
+
+
+== Streszczenie
+
+Datatype `none!` reprezentuje wartość, która nie należy do innego datatype'u. Jest analogiczny do nil albo nothing w innych językach programowania.
+
+Wartość `none!`  jest członkiem danych typesetów (zbiór typów): `immediate!`
+
+== Tworzenie
+
+Wartości `none!` mogą być utworzone przy użyciu dosłownej składni, albo podczas wykonywania przy użyciu konstruktora `make` lub konwertera `to`.
+
+----
+>> make none! 'x
+== none
+
+>> to none! 42
+== none
+----
+
+== Dosłowna składnia
+
+Uprzednio zdefiniowane słowo `none` albo serializowana składnia:
+----
+#[none]
+----
+
+== Testowanie wartości
+
+Użyj `none?`, aby sprawdzić czy wartość jest typu `none!`.
+
+----
+>> none? 1
+== false
+
+>> none? true
+== false
+
+>> none? none
+== true
+----
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+----
+>> type? none
+== none!
+----
+
+== Poprzednio zdefiniowane słowa
+
+=== Funkcje
+
+`to-none`
