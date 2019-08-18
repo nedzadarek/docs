@@ -1,0 +1,41 @@
+= Native! - typ danych
+:toc:
+:numbered:
+
+== Streszczenie
+
+Wartości `native!` reprezentują zewnętrzne funkcje, które są napisane w Red/System dla wydajności albo wygody (np. dostęp do API systemów). Funkcje natywne są używane jak normalne funkcje.
+
+Wartość `native!` jest członkiem danych typesetów (zbiór typów): `any-function!`, `default!`
+
+== Tworzenie
+
+Wartości `native!` nie mogę być utworzone podczas wykonywania.
+
+== Conversions
+
+Wartość `native!` nie wspiera konwersji.
+
+== Porównania
+
+Wartości `native!` mogą by porównane ze względu na identyczność i równość przy użyciu `same?`, `==`, `equal?`, `strict-equal?`, `not-equal?`, `<>`.
+
+== Testowanie wartości
+
+Użyj `native?`, aby sprawdzić czy wartość jest typu `native!`.
+
+```red
+>> native? :do
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? :do
+== native!
+```
+
+== Poprzednio utworzone słowa
+
+Poprzednio zdefiniowane wartości `native!` mogą być przeglądnięte, gdy wpiszemy `help native!` w konsoli Red.
