@@ -1,0 +1,138 @@
+= Pair! - typ danych
+:toc:
+:numbered:
+
+
+== Streszczenie
+
+Datatype `pair!` jest używany do reprezentacji 2-wymiarowych koordynat.
+
+Wartości `pair!` jest członkiem danych typesetów (zbiór typów): `immediate!`, `scalar!`
+
+== Dosłowna składnia
+
+Wartości `pair!` jest zapisywana jako dwie wartości `integer!` odseparowanymi `x`.
+
+
+`1024×768`
+
+`-42x42`
+
+
+== Tworzenie
+
+Wartości `pair!` mogą być utworzone przy pomocy dosłownej składni, albo w czasie wykonywania przy użyciu konstruktora `make`, konwertera `to` lub funkcji natywnej `as-pair`.
+
+```red
+>> make pair! [20 30]
+== 20x30
+
+>> make pair! 42
+== 42x42
+```
+
+
+```red
+>> to pair! [20 30]
+== 20x30
+
+>> to pair! 42
+== 42x42
+
+>> to pair! "42x42"
+== 42x42
+```
+
+`as-pair` bierze argumenty `x` i `y` typu `integer!` albo `float!`. Wartości `float!` będą skrócone.
+
+```red
+>> as-pair 20 30
+== 20x30
+
+>> as-pair 1.23 42
+== 1x42
+```
+
+== Porównania
+
+Wszystkie operatory porównań mogą być użyte z `pair!`: `=, ==, <>, >, <, >=, &lt;=, =?`. W dodatku, `min` i `max` też są wspierane.
+
+Kiedy porównujemy wartości `pair!`, wtedy są one porównywane ze względu na ich drugą część, `/y`, i jeżeli są takie same, wtedy będą porównane ze względu na pierwszą część, `/x`. Jeżeli obydwie części są takie same, wartości `pair!` są takie same. Dla przykładu:
+
+```red
+>> 5x3 = 5x3
+== true
+
+>> 0x0 < 1x1
+== true
+
+>> 999x999 < 1x1
+== false
+
+>> 999x0 < 1x1
+== true
+```
+
+== Arytmetyka
+
+`+`, `-`, `*`, `/`, `%`, `//`, `add`, `subtract`,  `multiply`, `divide`, `remainder` i `mod` mogą być użyte z wartościami `pair!`.
+
+
+== Refinementy
+
+Wartości `pair!` wspierają refinementy `/x` i `/y` dla odczytu i zapisu koordynat.
+
+```red
+>> my-pair: 1024x768
+== 1024x768
+
+>> my-pair/x
+== 1024
+
+>> my-pair/y
+== 768
+
+>> my-pair/y: 42
+== 42
+
+>> my-pair
+== 1024x42
+```
+
+== Testowanie wartości
+
+Użyj `pair?`, aby sprawdzić czy wartość jest typu `pair!`.
+
+```red
+>> pair? 42x42
+== true
+
+>> pair? 42
+== false
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? 42x42
+== pair!
+```
+
+== Poprzednio zdefiniowane słowa
+
+=== Akcje
+
+`absolute`, `add`, `and~`, `at`, `copy`, `divide`, `multiply`, `negate`, `or~`, `pick`, `remainder`, `reverse`, `round`, `skip`, `subtract`, `xor~`
+
+=== Funkcje
+
+`caret-to-offset`, `draw`, `first`, `make-face`, `metrics?`, `mod`, `modulo`, `offset-to-caret`, `offset-to-char`, `pair?`, `second`, `size-text`, `to-pair`, `within?`
+
+=== Funkcje natywne
+
+`as-pair`, `case`, `extend`, `zero?`
+
+
+=== Operators
+
+`%`, `*`, `+`, `-`, `/`, `//`, `and`, `or`, `xor`
