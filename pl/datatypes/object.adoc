@@ -1,0 +1,146 @@
+= Object! - typ danych
+:toc:
+:numbered:
+
+
+== Streszczenie
+
+Wartości `object!` reprezentują nazwane albo nienazwane konteksty, które zawierają pary `słowo: wartość`.
+
+Wartość `object!` jest członkiem danych typesetów (zbiór typów): `any-object!`, `default!`
+
+== Tworzenie
+
+Wartości `object!` mogą być utworzone podczas wykonywania przy użyciu konstruktora `make`, albo przy użyciu funkcji `context`, `object` lub `contruct`.
+
+`Make object!` tworzy nową wartość `object!`, wykonując podaną wartość `block!`.
+
+Funkcje `context` i `object` wywołują `make object!`.
+
+*Użycie make:*
+
+```red
+>> foo: make object! [x: "bar" y: "baz"]
+== make object! [
+    x: "bar"
+    y: "baz"
+]
+
+>> foo: make object! [x: "bar" y: ()]   ; wartość `block!` jest wykonana
+*** Script Error: y: needs a value
+*** Where: y
+*** Stack:
+```
+
+*Użycie context:*
+
+```red
+>> foo: context [x: "bar" y: "baz"]
+== make object! [
+    x: "bar"
+    y: "baz"
+]
+
+>> foo: context [x: "bar" y: ()]   ; wartość `block!` jest wykonana
+*** Script Error: y: needs a value
+*** Where: y
+*** Stack: context
+```
+
+*Użycie object:*
+
+```red
+>> foo: object [x: "bar" y: "baz"]
+== make object! [
+    x: "bar"
+    y: "baz"
+]
+
+>> foo: object [x: "bar" y: ()]   ; wartość `block!` jest wykonana
+*** Script Error: y: needs a value
+*** Where: y
+*** Stack: object
+```
+
+Jeżeli argument do `make` jest wartością `object!`, wtedy nowa wartość `object!` będzie utworzona z argumentem jako prototyp:
+
+```red
+>> foo: make object! [x: "bar" y: "baz"]
+== make object! [
+    x: "bar"
+    y: "baz"
+]
+
+>> bar: make foo [z: 42]
+== make object! [
+    x: "bar"
+    y: "baz"
+    z: 42
+]
+```
+
+Funkcja `construct` utworzy wartość `object!` bez wykonywania wartości `block!`:
+
+```red
+>> foo: construct [x: "bar" y: ()]
+== make object! [
+    x: "bar"
+    y: ()
+]
+```
+
+Jeżeli `/with` refinement będzie użyte z `construct`, wtedy nowa wartość `object!` będzie utworzona jako rozszerzenie podanej wartości `object!`:
+
+```red
+>> bar: construct/with [a: 42] foo
+== make object! [
+    x: "bar"
+    y: ()
+    a: 42
+]
+```
+
+== Dosłowna składnia
+
+```
+<object> ::= make object! <object-spec> | object <object-spec> | context <object-spec> |
+             make <object> <object-spec>
+
+<object-spec> ::= <block>
+```
+
+== Porównania
+
+Wszystkie operatory porównań mogą być użyte z `object!`: `=, ==, <>, >, <, >=, &lt;=, =?`.
+
+
+== Testowanie wartości
+
+Użyj `object?`, aby sprawdzić czy wartość jest typu `object!`.
+
+```red
+>> object? foo
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? foo
+== object!
+```
+
+
+== Poprzednio zdefiniowane słowa
+
+=== Akcje
+
+`copy`, `find`, `put`, `select`
+
+=== Funkcje
+
+`any-object?`, `class-of`, `context`, `distance?`, `dump-face`, `face?`, `fetch-help`, `foreach-face`, `get-scroller`, `help`, `help-string`, `layout`, `metrics?`, `object`, `object?`, `offset-to-caret`, `offset-to-char`, `overlap?`, `parse-func-spec`, `react`, `react?`, `request-font`, `rtd-layout`, `save`, `set-flag`, `set-focus`, `show`, `size-text`, `stop-reactor`, `unview`, `view`
+
+=== Funkcje natywne
+
+`bind`, `context?`, `extend`, `in`, `set`
