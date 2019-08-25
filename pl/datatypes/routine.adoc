@@ -1,0 +1,83 @@
+= Routine! - typ danych
+:toc:
+:numbered:
+
+== Streszczenie
+
+Wartość `routine!` reprezentuje funkcje z specyfikacją Red i ciałem Red/System.
+
+Specyfikacja wymaga datatype'ów Red jako argumentów i zwraca wartość, automatycznie konwertując je do właściwych typów Red/System kiedy zostaje wywołana.
+
+Dokumentacje Red/System można znaleźć w: https://static.red-lang.org/red-system-specs.html
+
+Wartość `routine!` jest członkiem danych typesetów (zbiór typów): `default!`, `any-function!`
+
+== Tworzenie
+
+Wartości `routine!` mogą być utworzone przy użyciu wbudowanej funkcji `routine`.
+
+== Dosłowna składnia
+
+```
+<routine> ::= routine <routine-spec> <routine-ciało>
+<routine-spec> ::= [<docstring>° <routine-argument>* <locals>° <routine-zwracana-wartość>°]
+<routine-argument> ::= <word> <argument doc>° | <word> [<type-literał>] <argument-doc>°
+<locals> ::= /local <routine-argument>*
+<routine-zwracana-wartość> ::= return: [<type-literał>]
+<type-literał> ::= any-type! | <nazwa-typu>
+<routine-ciało> ::= <block>
+```
+
+=== Tworzenie w czasie wykonywania
+
+Wartości `routine!` nie mogą być użyte w interpreterze Red. Muszą być poprzedzone wartością `set-word!` i skompilowane.
+
+```red
+Red []
+
+increment: routine [
+    n       [integer!]
+    return: [integer!]
+][
+    n + 1
+]
+```
+
+
+Typ argumentu jest ograniczony do pojedynczych słów: `any-type!`, `integer!`, `float!`, `logic!`, albo do typu, który Red/System `struct!` alias definiuje tutaj: https://github.com/red/red/blob/master/runtime/datatypes/structures.reds
+
+`Integer!`, `float!` i `logic!` nie są tłumaczone na odpowiednik Red/System.
+
+*Przykłady*
+
+Wartość `block!` Jest tłumaczona do odpowiednika Red/System:
+
+```red
+red-block!: alias struct! [
+	header 	[integer!]								;-- nagłówek komórki
+	head	[integer!]								;-- indeks głowy wartości `block!` (numerowane od zera)
+	node	[node!]									;-- wskaźnik do serii
+	extra	[integer!]								;-- (zarezerwowane na typy pochodne do `block!`)
+]
+```
+
+== Testowanie wartości
+
+Użyj `routine?`, aby sprawdzić czy wartość jest typu `routine!`.
+
+```red
+routine? :increment
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+type? :increment
+```
+
+
+== Poprzednio zdefiniowane słowa
+
+=== Funkcje
+
+`routine`, `routine?`
