@@ -1,0 +1,198 @@
+= Path! - typ danych
+:toc:
+:numbered:
+
+== Streszczenie
+
+Typ danych `path!` reprezentuje serie wartości oddzieloną ukośnikiem (`/`). Wartość `path!` jest typu `block!`, które jest ograniczona na typ wartości, które może zawierać. Wartości `word!`, `integer!`, `get-word!` i `paren!` są wspierane.
+
+`Path!` jest członkiem danych typesetów (zbiór typów): `any-block!`, `any-path!`, `series!`
+
+=== Odmiany wartości `path!`
+
+|========================================================================
+|*Syntaktyka*|*Datatype*|*Testowanie wartości *|*Konwersja*
+|foo/bar|`path!`|`path?`|`to path!`
+|foo/bar:|link:set-path.adoc[set-path!]|`set-path?`|`to set-path!`
+|:foo/bar|link:get-path.adoc[get-path!]|`get-path?`|`to get-path!`
+|'foo/bar|link:lit-path.adoc[lit-path!]|`lit-path?`|`to lit-path!`
+|========================================================================
+
+== Tworzenie
+
+Wartości `path!` mogą być utworzone przy użyciu dosłownej składni, albo w czasie wykonywania przy użyciu konstruktora `make` albo konwertera `to`.
+
+```red
+>> 'foo/bar/baz
+== foo/bar/baz
+```
+
+```red
+>> make path! [foo bar baz]
+== foo/bar/baz
+```
+
+Możesz utworzyć pustą wartość `path!` z wstępnie przydzielonym miejscem jeśli podamy wartość `integer!` do `make`:
+
+```red
+>> make path! 10
+==
+```
+
+Konwerter `to`:
+
+```red
+>> to path! "foo bar baz"
+== foo/bar/baz
+```
+
+[NOTE, caption=Caution]
+
+Możliwe jest utworzenie wartości `path!` programowo, które nie stosują się do zasad leksykalnych dosłownej wartości `path!`.
+
+```red
+>> mold to path! [a #(b: 2) c 1.2 /z]
+== "a/#(^/    b: 2^/)/c/1.2//z"
+
+>> load mold to path! [a #(b: 2) c 1.2 /z]
+*** Syntax Error: invalid path! at "a/#(    b: 2)/c/1.2//z"
+*** Where: do
+*** Stack: load
+```
+
+== Dosłowna składnia
+
+BNF:
+
+```
+<path-literał> ::= <path-głowa>/<selector>
+<path-głowa>    ::= <word-literał> | <path-literał>
+<selektor> ::= <integer> | <word-literał> | :<word-literał> | <paren>
+```
+
+Parse:
+
+```
+path: [word! some selektor]
+selektor: [#"/" [integer! | word! | get-word! | paren!]]
+```
+
+Path-głowa datatypes: link:word.adoc[word!], `path!`
+
+Selektor datatypes: link:integer.adoc[integer!], link:word.adoc[word!], link:get-word.adoc[get-word!], link:paren.adoc[paren!]
+
+== Kroki wykonywania
+
+Wartości `path!` prowadzą do zagnieżdżonych wartości, albo do konkretnego zachowania podczas wykonania funkcji. Muszą zaczynać się od słowa. Wartość, na które słowo wskazuje określa jak wartość `path!` będzie wykonana.
+
+* Jeżeli wartość jest funkcją wtedy następujące wyrażenia w wartości `path!` muszą być wartościami `word!`. Te słowa są traktowane jako refinementy podczas wykonywania funkcji.
+
+```red
+>> append/only [42][foo]
+== [42 [foo]]
+```
+
+Błąd będzie zgłoszony, gdy nie znaleziono refinement w funkcji:
+
+```red
+>> append/xyz [42][foo]
+*** Script Error: append has no refinement called xyz
+*** Where: append
+*** Stack:
+```
+
+[NOTE]
+Wartości `path!` są aktywnymi typami i będą wykonywać umieszczone w nim funkcje. Wartości `op!` nie są aktualnie wspierane.
+
+```red
+>> f: does [42]
+== func [][42]
+
+>> insert b: [] :f
+== []
+
+>> b/1
+== 42
+```
+
+* Jeżeli wartość nie jest funkcją, wtedy stosuje się niżej wymienione zasady:
+
+** Jeżeli następne wyrażenie w wartości `path!` będzie wartością `word!`, wtedy `select` będzie użyty z głową wartości `path!`. Głowa wartości `path!` musi być typu wspieranego przez `select` (np. `block!`, `map!` albo `object!`).
+
+```red
+>> blk: [foo bar baz]
+== [foo bar baz]
+
+>> blk/bar
+== baz
+```
+
+Jeżeli wartość nie będzie znaleziona wtedy `select` zwróci `none`:
+
+```red
+>> blk/sheboygan
+== none
+```
+
+* Wartości `word!` w wartości `path!` po pierwszym elemencie nie są wykonywane. Jeżeli chcesz je wykonać, użyj `get-word!` albo `paren!`.
+
+```red
+>> selector: 'bar
+== bar
+
+>> my-block: [foo bar baz]
+== [foo bar baz]
+
+>> my-block/:selector
+== baz
+```
+
+```red
+>> my-block/('bar)
+== baz
+```
+
+* Jeżeli następna wartość to wartość `integer!` wtedy będzie użyty `pick` z głową wartości `path!`. Głowa wartości `path!` musi być typu spieranego przez `pick` (np. `series!`, `tuple!` albo `date!`).
+
+```red
+>> blk: [foo bar baz qux]
+== [foo bar baz qux]
+
+>> blk/3  ; pick from the third index of blk
+== baz
+```
+
+Jeżeli wartość `integer!` jest poza zakresem głowy wartości `path!` wtedy `pick` zwróci `none`:
+
+```red
+>> length? blk
+== 4
+
+>> blk/7
+== none
+
+>> blk/-1
+== none
+```
+
+== Testowanie wartości
+
+Użyj `path?` , aby sprawdzić czy wartość jest typu `path!`.
+
+```red
+>> path? 'foo/bar
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? 'foo/bar
+== path!
+```
+
+== Poprzednio zdefiniowane słowa
+
+=== Funkcje
+
+`any-block?`, `any-path?`, `path?`, `series?`, `to-path`
