@@ -1,0 +1,88 @@
+= Refinement! - typ danych
+:toc:
+:numbered:
+
+
+== Streszczenie
+
+Wartości `refinement!` są symbolicznymi wartościami, które są używane jako modyfikatory do funkcji albo rozszerzenia do wartości `object!`, `file!`, `url!` lub `(get/set/lit-)path!`.
+
+Funkcja `repend` bez refinementu:
+```red
+>> repend ["foo"] [21 * 2]
+== ["foo" 42]
+```
+
+Z refinementem `/only`:
+
+```red
+>> repend/only ["foo"] [21 * 2]
+== ["foo" [42]]
+```
+
+Wartość `refinement!` jest członkiem danych typesetów (zbiór typów): `all-word!`, `immediate!`
+
+== Tworzenie
+
+Wartości `refinement!` mogą być utworzone przy użyciu dosłownej składni albo w czasie wykonywania przy użyciu konstruktora `make` lub konwertera `to`.
+
+```red
+>> /foo
+== /foo
+```
+
+```red
+>> make refinement! "bar"
+== /bar
+```
+
+```red
+>> to refinement! 'baz
+== /baz
+```
+
+== Dosłowna składnia
+
+Ukośnik `/`, a następnie jedno albo więcej znaków z całego zakresu Unicode, włączając znaki interpunkcyjne z podzakresu ASCII: `! & ' * + - . < = > ? _ | ~``
+
+Niedozwolone znaki to znaki kontrolne, znaki niedrukowalne i znaki interpunkcyjne z podzakresu ASCII: `/ \ ^ , [ ] ( ) { } " # $ % @ : ;`
+
+[NOTE, caption=Note]
+
+Użycie `@` nie spowoduje błędu, ale zmieni wartość `refinement!` na wartość `email!`.
+
+== Porównania
+
+Wszystkie operatory porównań mogą być użyte z `refinement!`: `=, ==, <>, >, <, >=, &lt;=, =?`.
+
+== Testowanie wartości
+
+Użyj `refinement?`, aby sprawdzić czy wartość jest typu `refinement!`.
+
+```red
+>> refinement? /foo
+== true
+
+>> refinement? third [42 "Foo" /bar]
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? /foo
+== refinement!
+
+>> type? third [42 "Foo" /bar]
+== refinement!
+```
+
+== Poprzednio zdefiniowane słowa
+
+=== Funkcje
+
+`parse-func-spec`, `refinement?`, `to-refinement`
+
+=== Funkcje natywne
+
+`function`
