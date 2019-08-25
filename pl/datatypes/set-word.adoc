@@ -1,0 +1,75 @@
+= Set-word! - typ danych
+:toc:
+:numbered:
+
+== Streszczenie
+
+Datatype `set-word!` ustawia odniesienie do wartości.
+
+Jeżeli będzie użyty poza wartościami `object!` albo `map!`, wtedy `set-word!` ustawi odniesienie w aktualnym kontekście do wartości, która po nim następuje.
+
+```red
+foo: 2 * 21
+```
+
+Wartość `set-word!` jest członkiem danych typesetów (zbiór typów): `any-word!`, `all-word!`, `immediate!`
+
+== Tworzenie
+
+Wartości `set-word!` mogą być utworzone przy użyciu dosłownej składni, albo w czasie wykonywania przy użyciu konwertera `to` z danych datatype'ów: `char!`, `logic!`, `string!`, `datatype!`, `issue!`, `refinement!` i `lit-word!`.
+
+```red
+>> to set-word! #"X"
+== X:
+
+>> to set-word! true
+== true:
+
+>> to set-word! "Hello"
+== Hello:
+
+>> to set-word! float!
+== float!:
+
+>> to set-word! #A42
+== A42:
+
+>> to set-word! /only
+== only:
+
+>> to set-word! 'foo
+== foo:
+```
+
+
+== Dosłowna składnia
+
+Jedno albo więcej znaków z całego zakresu Unicode, włączając znaki interpunkcyjne z podzakresu ASCII: `! & ' * + - . < = > ? _ | ~``, a następnie dwukropek `:`.
+
+Niedozwolone znaki to znaki kontrolne, znaki niedrukowalne i znaki interpunkcyjne z podzakresu ASCII: `/ \ ^ , [ ] ( ) { } " # $ % @ : ;`
+
+Wartość `set-word!` nie może zaczynać się od cyfry.
+
+
+== Testowanie wartości
+
+Użyj `set-word?`, aby sprawdzić czy wartość jest typu `set-word!`.
+
+```red
+>> set-word? first [foo: 'bar baz]
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? first [foo: 'bar baz]
+== set-word!
+```
+
+
+== Poprzednio zdefiniowane słowa
+
+=== Funkcje
+
+`to-set-word`
