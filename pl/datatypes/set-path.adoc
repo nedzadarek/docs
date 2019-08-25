@@ -1,0 +1,92 @@
+= Set-path! - typ danych
+:toc:
+:numbered:
+
+
+== Streszczenie
+
+Datatype `set-path!` ustala kontekstowe odniesienie (słowo w kontekście, indeks w serii albo słowne odniesienie w serii albo w wartości `map!`).
+
+Wartość `set-path!` jest członkiem danych typesetów (zbiór typów) `any-block!`, `any-path!`, `series!`
+
+== Tworzenie
+
+Wartości `set-path!` mogą być utworzone podczas wykonywania przy użyciu konstruktora `make` albo konwertera `to`.
+
+```red
+>> make set-path! [foo bar baz]
+== foo/bar/baz:
+```
+
+Możesz utworzyć pustą wartość `set-path!` podając wartość `integer!` jako argument do `make`:
+
+```red
+>> make set-path! 10
+== :
+==
+```
+
+Konwerter `to`:
+
+```red
+>> to set-path! "foo bar baz"
+== foo/bar/baz:
+```
+
+== Dosłowna składnia
+
+BNF:
+
+```
+<set-path-literał> ::= <path-literał>:
+
+<path-literał> ::= <path-głowa>/<selektor>
+<path-głowa>    ::= <word-literał> | <path-literał>
+<selektor> ::= <integer> | <word-literał> | :<word-literał> | <paren>
+```
+
+Parse:
+
+```
+set-path: [set-word! some selektor]
+selektor: [#"/" [integer! | word! | get-word! | paren!]]
+```
+
+Path-głowa datatype'y': link:set-word.adoc[set-word!], link:set-path.adoc[set-path!]
+
+Selektor datatype'y': link:integer.adoc[integer!], link:word.adoc[word!], link:get-word.adoc[get-word!], link:paren.adoc[paren!]
+
+
+== Kroki wykonywania
+
+Wartość `set-path` podąża tymi samymi zasadami co `path!` dopóki nie dojdziemy do selektora. Wtedy wartość selektora jest ustawiona na wyrażenie, które po nim następuje.
+
+Jeżeli nie ma wyrażenie po selektorze, albo wyrażenie zwróci `unset!` wtedy błąd będzie wywołany.
+
+== Testowanie wartości
+
+Użyj `set-path?`, aby sprawdzić czy wartość jest typu `set-path!`.
+
+```red
+>> set-path? first [foo/bar:]
+== true
+
+>> set-path? quote foo/bar:
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? first [foo/bar:]
+== set-path!
+
+>> type? quote foo/bar:
+== set-path!
+```
+
+== Poprzednio zdefiniowane słowa
+
+=== Funkcje
+
+`set-path?`, `to-set-path`
