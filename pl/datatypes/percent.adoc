@@ -1,0 +1,81 @@
+= Percent! - typ danych
+:toc:
+:numbered:
+
+
+== Streszczenie
+
+Wartości `percent!` reprezentują wartości link:float.adoc[float!] wyrażone jako procenty.
+
+Wartość `percent!` jest członkiem danych typesetów (zbiór typów): `number!`, `scalar!`
+
+
+== Tworzenie
+
+Wartości `percent!` mogą być utworzone przy użyciu dosłownej składni albo podczas wykonywania przy użyciu konstruktora `make` lub konwertera `to`.
+
+```red
+>> 100%
+== 100%
+
+>> 12.2%
+== 12.2%
+
+>> .76%
+== 0.76%
+```
+
+```red
+>> make percent! 1
+== 100%
+
+>> make percent! .1
+== 10%
+
+>> make percent! .01
+== 1%
+```
+
+```red
+>> to percent! 1
+== 100%
+
+>> to percent! .1
+== 10%
+
+>> to percent! .01
+== 1%
+```
+
+== Dosłowna składnia
+
+```
+<percent-literal> ::= <integer-literal>% | <float-literal>%
+```
+
+== Porównania
+
+Wszystkie operatory porównań mogą być użyte zn `percent!`: `=, ==, <>, >, <, >=, &lt;=, =?`. W dodatku `min` i `max` też są wspierane.
+
+
+== Testowanie wartości
+
+Użyj `percent?`, aby sprawdzić czy wartość jest typu `percent!`.
+
+```red
+>> percent? 42%
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? 42%
+== percent!
+```
+
+== Poprzednio zdefiniowane słowa
+
+=== Funkcje
+
+`percent?`, `to-percent`
