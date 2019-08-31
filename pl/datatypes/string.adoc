@@ -1,0 +1,114 @@
+= String! - typ danych
+:toc:
+:numbered:
+
+
+== Abstract
+
+Wartość `string!` jest sekwencją znaków kodowych Unicode, albo wartości link:char.adoc[char!].
+
+Wartość `string!` jest członkiem danych typesetów (zbiór typów): `any-string!`, `default!`, `series!`
+
+== Tworzenie
+
+Wartości `string!` mogą być utworzone przy pomocy dosłownej składni, albo w czasie wykonywania przy użyciu konstruktora `make` lub konwertera `to`.
+
+```red
+>> s: make string! 100
+== ""
+```
+
+```red
+>> to string! 'foo
+== "foo"
+
+>> to string! [bar]
+== "bar"
+
+>> to string! 42
+== "42"
+```
+
+Natywne funkcje `native!`, `form` i `mold`, mogą być użyte, aby przekonwertować wartość do wartości `string!` przyjaznej użytkownikowi lub wartości `string!` o formacie źródła, odpowiednio.
+
+```red
+>> form 'foo
+== "foo"
+```
+
+```red
+>> mold 'bar
+== "bar"
+```
+
+[NOTE, caption=Note]
+
+Próba konwersji `none` przez `to` wywoła błąd.
+
+== Dosłowna składnia
+
+Ciąg jednowierszowy:
+
+Zero albo więcej znaków ograniczone cudzysłowem.
+
+`"foo"`
+
+Ciąg wielowierszowy:
+
+Zero albo więcej znaków ograniczone nawiasami klamrowymi.
+
+`{foo}`
+
+Ciągi jednowierszowe nie mogą zawierać znaków nowej linii bez znaku ucieczki.
+
+```red
+>> cr
+== #"^M"
+
+>> lf
+== #"^/"
+
+>> crlf
+== "^M^/"
+```
+
+Ciąg wielowierszowy może zawierać znaki nowej linii, znaki cytatu i sparowanymi nawiasami. `{foo^{}`.
+
+== Porównania
+
+Wszystkie operatory porównań mogą być użyte z `string!`: `=, ==, <>, >, <, >=, &lt;=, =?`. Ponadto `min` i `max` też są wspierane.
+
+
+== Testowanie wartości
+
+Użyj `string?`, aby sprawdzić czy wartość jest typu `string!`.
+
+```red
+>> string? "foo"
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? "foo"
+== string!
+```
+
+== Uprzednio zdefiniowane słowa
+
+=== Akcje
+
+`find`, `form`, `mold`, `pick`, `poke`, `put`, `read`, `select`, `trim`
+
+=== Funkcje
+
+`a-an`, `any-string?`, `ask`, `charset`, `clean-path`, `dirize`, `ellipsize-at`, `help-string`, `input`, `load`, `pad`, `string?`, `to-string`
+
+=== Funkcje natywne
+
+`as`, `call`, `checksum`, `debase`, `dehex`, `difference`, `do`, `enbase`, `exclude`, `get-env`, `intersect`, `lowercase`, `parse`, `set-env`, `to-local-file`, `union`, `unique`, `uppercase`
+
+=== Funkcje routine'ynowe
+
+`set-current-dir`, `write-clipboard`, `write-stdout`
