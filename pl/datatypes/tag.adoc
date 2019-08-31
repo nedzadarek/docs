@@ -1,0 +1,105 @@
+= Tag! - typ danych
+:toc:
+:numbered:
+
+== Streszczenie
+
+Wartości `tag!` reprezentują znaczniki i elementy języka znacznikowego.
+
+Wartość `tag!` jest członkiem danych typesetów (zbiór typów): `any-string!`, `series!`
+
+== Tworzenie
+
+Wartości `tag!` mogą być stworzone przy użyciu dosłownej składni albo w czasie wykonywania przy użyciu konstruktora `make` albo konwertera `to`.
+
+```red
+>> make tag! "foo"
+== <foo>
+```
+
+```red
+>> to tag! 'bar
+== <bar>
+```
+
+== Dosłowna składnia
+
+Jedno albo więcej znaków pomiędzy nawiasami ostrokątnymi, otwierającym `<` oraz zamykającym `>`.
+
+Pierwsza część po znaku otwierającym nie mogą zawierać `<`, `>`, `=` i dosłownego znaku niedrukowalnego.
+
+```red
+>> <<foo>
+*** Script Error: < operator is missing an argument
+*** Where: catch
+*** Stack:
+
+>> <>foo>
+*** Script Error: <> operator is missing an argument
+*** Where: catch
+*** Stack:
+
+>> <=foo>
+*** Syntax Error: invalid value at "<=foo>"
+*** Where: do
+*** Stack: load
+
+>> < foo>
+*** Script Error: < operator is missing an argument
+*** Where: catch
+*** Stack:
+```
+
+`<` jest dozwolony po pierwszej pozycji.
+
+```red
+>> type? <f<oo>
+== tag!
+```
+
+[NOTE, caption=Note]
+
+Jest możliwe utworzenie wartości `tag!` przy użyciu `make`, które nie są objęte obecnymi ograniczeniami leksera.
+
+```red
+>> make tag! " foo"
+== < foo>
+
+>> make tag! "<foo"
+== <<foo>
+
+>> make tag! ">foo"
+== <>foo>
+
+>> make tag! "=foo"
+== <=foo>
+
+>> make tag! " foo"
+== < foo>
+```
+
+== Porównania
+
+Wszystkie operatory porównań mogą być użyte z `tag!`: `=, ==, <>, >, <, >=, &lt;=, =?`. Ponadto `min` i `max` też są wspierane.
+
+== Testowanie wartości
+
+Użyj `tag?`, aby sprawdzić czy wartość jest typu `tag!`.
+
+```red
+>> tag? <foo>
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? <foo>
+== tag!
+```
+
+== Poprzednio zdefiniowane słowa
+
+=== Funkcje
+
+`tag?`, `to-tag`
