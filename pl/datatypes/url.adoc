@@ -1,0 +1,66 @@
+= Url! - typ danych
+:toc:
+:numbered:
+
+
+== Streszczenie
+
+Wartość `url!` reprezentuje odniesienie do zasobu sieciowego i pozwala na dosłowne wyrażanie Uniform Resource Locators.
+
+Wartość `url!` jest członkiem danych typesetów (zbiór typów): `any-string!`, `series!`
+
+== Tworzenie
+
+Wartości `url` mogą być utworzone przy pomocy dosłownej składni albo podczas wykonywania przy użyciu konstruktora `make` lub konwertera `to`.
+
+```red
+>> make url! [foo bar baz]
+== foo://bar/baz
+```
+
+```red
+>> to url! [ftp localhost]
+== ftp://localhost
+```
+
+== Dosłowna składnia
+
+Jedno lub więcej znaków, `:`, kończąc na jednym lub więcej znaku.
+
+Kodowania Url takie jak %20 i %30 są dozwolone.
+
+
+== Porównania
+
+Wszystkie operatory porównań mogą być użyte z `url!`: `=, ==, <>, >, <, >=, &lt;=, =?`. Ponadto `min` i `max` też są wspierane.
+
+
+== Testowanie wartości
+
+Użyj `url?`, aby sprawdzić czy wartość jest typu `url!`.
+
+```red
+>> url? https://www.foo.org
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> url? http://bar.net
+== true
+```
+
+== Poprzednio zdefiniowane słowa
+
+=== Akcje
+
+`read`, `write`
+
+=== Funkcje
+
+`clean-path`, `dir?`, `dirize`, `do-file`, `do-thru`, `exists-thru?`, `load`, `load-thru`, `path-thru`, `read-thru`, `save`, `split-path`, `suffix?`, `to-url`, `url?`
+
+=== Funkcje natywne
+
+`browse`, `dehex`
