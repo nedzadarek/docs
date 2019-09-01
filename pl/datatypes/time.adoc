@@ -1,0 +1,337 @@
+= Time! - typ danych
+:toc:
+:numbered:
+
+== Streszczenie
+
+Wartości `time!` reprezentują ilość czasu jako godziny, minuty i sekundy. Mogą być zinterpretowane jako czas od północy w kontekście dat albo jako absolutny czas dnia.
+
+Wartość `time!` jest członkiem danych typesetów (zbiór typów): `immediate!`, `scalar!`
+
+== Tworzenie
+
+Wartości `time!` mogą być utworzone przy pomocy dosłownej składni, albo w czasie wykonywania przy użyciu konstruktora `make` lub konwertera `to`.
+
+== Dosłowna składnia
+
+```
+<czas-literał> ::= <Red-czas> | +<Red-czas> | -<Red-czas>
+<Red-czas> ::= <godziny>:<minuty> | <godziny>:<minuty>:<sekundy> | <godziny>:<minuty>:<sekundy>.<ułamek-dziesiętny> |
+               <minuty>:<sekundy>.<ułamek-dziesiętny>
+```
+
+== Tworzenie w czasie wykonywania
+
+----
+make time! [<godzina> <minuta> <sekunda>]
+make time! <integer-literał> | <float-literał>
+
+to time! [<godzina> <minuta> <sekunda>]
+to time! <integer-literał> | <float-literał>
+
+<godzina>    : <integer-literał>
+<minuta>  : <integer-literał>
+<sekunda>  : <integer-literał> | <float-literał>
+----
+
+
+```red
+>> make time! 60
+== 0:01:00
+
+>> make time! 95'000
+== 26:23:20
+
+>> make time! [3 2 1]
+== 3:02:01
+
+>> make time! 300.45
+== 0:05:00.45
+```
+
+```red
+>> to time! 60
+== 0:01:00
+
+>> to time! 95'000
+== 26:23:20
+
+>> to time! [3 2 1]
+== 3:02:01
+```
+
+== Akcesory ścieżki
+
+Akcesory ścieżki umożliwiają w dogodny sposób na czytanie i ustawiania wszystkich pól wartości `time!`.
+
+=== /hour
+
+*Opis*
+
+Odczytuje albo ustawia pole godziny. Ilość godzin jest zwrócona jako wartość `integer!`.
+
+*Przykłady*
+
+```red
+>> t: make time! [3 2 1]
+== 3:02:01
+
+>> t/hour
+== 3
+
+>> t/hour: 6
+== 6
+
+>> t
+== 6:02:01
+```
+
+=== /minute
+
+*Opis*
+
+Odczytuje albo ustawia pole minutę. Ilość minut jest zwrócona jako wartość `integer!`.
+
+*Przykłady*
+
+```red
+>> t: make time! [3 2 1]
+== 3:02:01
+
+>> t/minute
+== 2
+
+>> t/minute: 7
+== 7
+
+>> t
+== 3:07:01
+```
+
+=== /second
+
+*Opis*
+
+Odczytuje albo ustawia pole sekundy. Ilość sekund jest zwrócona jako wartość `float!`.
+
+*Przykłady*
+
+```red
+>> t: make time! [3 2 1]
+== 3:02:01
+
+>> t/second
+== 1.0
+
+>> t/second: 58
+== 58
+
+>> t
+== 3:02:58
+```
+
+Pola wartości `time!` mogą być też dostępne przez użyciu w notacji ścieżki.
+
+```red
+>> t
+== 3:02:01
+
+>> t/1
+== 3
+
+>> t/2
+== 2
+
+>> t/3
+== 1.0
+```
+
+=== Dostęp do pól wartości `time!` przy użyciu Pick
+
+Możliwy jest dostęp do pól wartości `time!` bez użycia notacji ścieżki. Może to być bardziej poręcne w niektórych systuacjach. `pick` może być użyty w tych okazjach.
+
+*Syntaktyka*
+
+----
+pick <czas> <pole>
+
+<czas>  : a time! value
+<pole> : an integer! value
+----
+
+*Przykłady*
+
+```red
+>> t
+== 3:02:01
+
+>> pick t 1
+== 3
+
+>> pick t 2
+== 2
+
+>> pick t 3
+== 1.0
+```
+
+== Konwersja
+
+----
+to integer! <czas>
+
+<czas>  : a time! value
+----
+
+```red
+>> t
+== 3:02:01
+
+>> to integer! t
+== 10921
+```
+
+----
+to float! <czas>
+
+<czas>  : a time! value
+----
+
+```red
+>> t
+== 3:02:01
+
+>> to float! t
+== 10921.0
+```
+
+Wartości `integer!`, `float!` i `percent!` mogą być skonwertowane do wartości `time!`.
+
+```red
+>> i: to integer! t
+== 10921
+
+>> to time! i
+== 3:02:01
+```
+
+```red
+>> f: to float! t
+== 10921.0
+
+>> to time! f
+== 3:02:01
+```
+
+```red
+>> p: to percent! t
+== 1092100%
+
+>> to time! p
+== 3:02:01
+```
+
+== Porównania
+
+Wszystkie operatory porównań mogą być użyte z `time!`: `=, ==, <>, >, <, >=, &lt;=, =?`. Ponadto `min` i `max` też są wspierane.
+
+== Arytmetyka
+
+Wspierane operacje matematyczne:
+
+* dodawanie i odejmowanie wartości od każdego pola.
+* dodawanie i odejmowanie wartości `integer!` z wartością `time!`.
+* dodawanie i odejmowanie wartości `time!` z wartością `time!`.
+* mnożenie i dzielenie wartości z każdych pól wartości `time!`.
+* mnożenie i dzielenie wartości `integer!` z wartością `time!`.
+
+*Przykłady*
+
+```red
+>> t: 2:30:45
+== 2:30:45
+
+>> t/hour: t/hour + 5
+== 7
+
+>> t
+== 7:30:45
+
+>> t/minute: t/minute - 20
+== 10
+
+>> t
+== 7:10:45
+```
+
+```red
+
+>> 1:40:45 + 50
+== 1:41:35
+
+>> 1:40:45 - 100
+== 1:39:05
+```
+
+```red
+
+>> 3:02:01 + 1:45:30
+== 4:47:31
+
+>> 3:02:01 - 1:00:00
+== 2:02:01
+```
+
+```red
+t: 2:30:45
+
+>> t/second: t/second * 5
+== 225.0
+
+>> t
+== 2:33:45
+
+>> t/2 / 3
+== 11
+
+>> t/2 // 3
+== 0
+
+>> t/3 * 3
+== 135.0
+```
+
+== Testowanie wartości
+
+Użyj `time?`, aby sprawdzić czy wartość jest typu `time!`.
+
+```red
+>> time? t
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? t
+== time!
+>>
+```
+
+== Poprzednio zdefiniowane słowa
+
+=== Akcje
+
+`absolute`, `add`, `change`, `divide`, `even?`, `multiply`, `negate`, `odd?`, `pick`, `remainder`, `round`, `subtract`
+
+=== Funkcje
+
+`first`, `mod`, `modulo`, `second`, `third`, `time?`, `to-time`
+
+=== Funkcje natywne
+
+`loop`, `negative?`, `now`, `positive?`, `remove-each`, `repeat`, `sign?`, `wait`, `zero?`
+
+=== Operatory
+
+`%`, `*`, `+`, `-`, `/`, `//`
