@@ -1,0 +1,105 @@
+= Tuple! - typ danych
+:toc:
+:numbered:
+
+
+== Streszczenie
+
+
+Datatype `tuple!` jest używane do reprezentacji kolorów rgb i rgba, adresów ip i numer wersji.
+
+Wartości `tuple!` muszą zawierać co najmniej dwa separatory dziesiętne, a liczby muszą dodatnie z zakresu `0 - 255`.
+
+Wartość `tuple!` jest członkiem danych typesetów (zbiór typów): `immediate!`, `scalar!`
+
+== Dosłowna składnia
+
+
+Sekwencja trzech do dwunastu dodatnich liczb odseparowanymi separatorem dziesiętnym.
+
+`1.2.3`
+
+`255.255.255.0`
+
+`1.2.3.4.5.6.7.8.9.10.11.12`
+
+
+== Tworzenei
+
+
+Wartości `tuple!` mogą być utworzone przy pomocy dosłownej składni albo w czasie wykonywania przy użyciu konstruktora `make` lub konwertera `to`.
+
+```red
+>> make tuple! [1 2 3]
+== 1.2.3
+```
+
+```red
+>> to tuple! [42]
+== 42.0.0
+
+>> to tuple! [1 2 3]
+== 1.2.3
+```
+
+== Porównania
+
+Wszystkie operatory porównań mogą być użyte z `tuple!`: `=, ==, <>, >, <, >=, &lt;=, =?`. Ponadto `min` i `max` też są wspierane.
+
+Jeżeli `min` albo `max` zostanie użyta z dwoma wartościami `tuple!` wtedy te wartości muszą być tego samego rozmiaru.
+
+```red
+>> min 1.2.3 4.5.6
+== 1.2.3
+
+>> max 1.2.3 4.5.6
+== 4.5.6
+```
+
+== Arytmetyka
+
+`+`, `-`, `*`, `/`, `%`, `//`, `add`, `subtract`,  `multiply`, `divide`, `remainder` i `mod` mogą być użyte z wartościami `tuple!`.
+
+Jeżeli wynik będzie poza zakresem `0 - 255`, wtedy wynik będzie ucięty na `0` albo `255`.
+
+```red
+>> gray
+== 128.128.128
+
+>> gray * 2
+== 255.255.255
+```
+
+== Testowanie wartości
+
+Użyj `tuple?`, aby sprawdzić czy wartość jest typu`tuple!` datatype.
+
+```red
+>> tuple? 1.2.3
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? 1.2.3
+== tuple!
+```
+
+== Poprzednio zdefiniowane słowa
+
+=== Akcje
+
+`add`, `subtract`, `multiply`, `divide`, `remainder`, `and~`, `or~`, `xor~`, `length?`, `pick`, `reverse`
+
+=== Funkcje
+
+`first`, `second`, `third`, `fourth`, `fifth`, `to-tuple`, `tuple?`, `mod`, `modulo`
+
+=== Funkcje natywne
+
+`zero?`
+
+=== Operatory
+
+`+`, `-`, `*`, `/`, `%`, `and`, `or`, `xor`
