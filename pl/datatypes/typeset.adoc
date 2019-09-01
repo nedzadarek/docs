@@ -1,0 +1,105 @@
+= Typeset! - typ danych
+:toc:
+:numbered:
+
+== Streszczenie
+
+Wartość `typeset!` reprezentuje kolekcje predefiniowanych wartości `datatype!`.
+
+Wartość `typeset!` jest członkiem danych typesetów (zbiór typów): `default!`, `immediate!`
+
+== Tworzenie
+
+Wartości `typeset!` mogą być utworzone przy użyciu konstruktora `make` albo konwertera `to`.
+
+== Dosłowna składnia
+
+Przez konwencje, dosłowna składnia to wartość `word!` zakończona wykrzyknikiem `!`.
+
+Przykłady: `any-list!`, `number!`, `series!`
+
+=== Tworzenie w czasie wykonywania
+
+```
+<typeset> ::= make typeset! [<typeset-element>*]
+<typeset-element> ::= <typeset-nazwa> | <datatype-nazwa>
+```
+
+*Przykłady*
+
+```red
+>> number!: make typeset! [integer! float! percent!]
+== make typeset! [integer! float! percent!]
+
+>> collection!: make typeset! [block! paren! map!]
+== make typeset! [block! paren! map!]
+
+>> to typeset! [integer! float! percent!]
+== make typeset! [integer! float! percent!]
+```
+
+Puste wartości `typeset!` so dozwolone.
+
+```red
+>> empty!: make typeset! []
+== make typeset! []
+```
+
+== Konwersja
+
+Wartość `typeset!` może być przekonwertowana do każdej wartości typeset `any-list!`
+
+```red
+>> to block! number!
+== [integer! float! percent!]
+
+>> to paren! number!
+== (integer! float! percent!)
+
+>> to hash! number!
+== make hash! [integer! float! percent!]
+```
+
+== Porównania
+
+Wartość `typeset!` nie wspiera porównań.
+
+== Operacje na zbiorach
+
+Następujące operacje na zbiorach są możliwe z wartościami `typeset!`:
+
+`difference`, `exclude`, `intersect`, `union`
+
+== Testowanie wartości
+
+Użyj `typeset?`, aby sprawdzić czy wartość jest typu `typeset!`.
+
+```red
+>> typeset? number!
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? number!
+== typeset!
+```
+
+== Poprzednio zdefiniowane słowa
+
+=== Akcje
+
+`and~`, `complement`, `find`, `or~`, `xor~`
+
+=== Funkcje
+
+`to-typeset`
+
+=== Funkcje natywne
+
+`difference`, `exclude`, `intersect`, `union`
+
+=== Operatory
+
+`and`, `or`, `xor`
