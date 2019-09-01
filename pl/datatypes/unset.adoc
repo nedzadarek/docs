@@ -1,0 +1,55 @@
+= Unset! - typ danych
+:toc:
+:numbered:
+
+
+== Streszczenie
+
+`Unset!` jest pojedynczą wartością, która reprezentuje nienadającą się do użytku wartość.
+
+
+== Tworzenie
+
+Wartości `unset!` mogą być utworzone w czasie wykonywania przy użyciu konstruktora `make` albo konwertera `to`.
+
+`make unset! <każdy-typ>`
+
+`to unset! <każdy-typ>`
+
+
+== Dosłowna składnia
+
+Nie istnieje dosłowna składnia dla `unset!`. Wartość ta jest rezultatem wykonania `()`, `do []`, `print` albo `get/any <word>`, gdy `<word>` nie został ustawiony.
+
+
+== Testowanie wartości
+
+Użyj `unset?`, aby sprawdzić czy wartość jest typu `unset!`.
+
+----
+>> unset? 1
+== false
+
+>> unset? ()
+== true
+
+>> unset? unset 'x
+== true
+----
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+----
+>> type? unset 'x
+== unset!
+----
+
+== Poprzednio zdefiniowane słowa
+
+=== Funkcje
+
+`to-unset`
+
+=== Funkcje natywne
+
+`unset`
