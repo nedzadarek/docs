@@ -1,0 +1,135 @@
+= Vector! - typ danych
+:toc:
+:numbered:
+
+
+== Streszczenie
+// Opis wzięty z https://github.com/meijeru/red.specs-public/blob/master/specs.adoc#41-type-list
+
+Wartość `vector!` jest uporządkowaną sekwencją wartości o identycznym typie, który może być `char!`, `integer!`, `percent!` albo `float!`.
+
+Wartość `vector!` jest członkiem danych typesetów (zbiór typów): `default!`, `series!`
+
+== Tworzenie
+
+Wartości `vector!` mogą być utworzone podczas wykonywania przy użyciu konstruktora `make`.
+
+=== Tworzenie w czasie wykonywania
+
+// gramatyka z https://github.com/meijeru/red.specs-public/blob/master/specs.adoc#code-vector-code
+
+```
+<vector> ::= make vector! <vector-spec>
+<vector-spec> ::= <block> | [ <typ-i-rozmiar> <block>]
+<typ-i-rozmiar> ::= char! 8 | char! 16 | char! 32 |
+                    integer! 8 | integer! 16 | integer! 32 |
+                    float! 32 | float! 64 | percent! 32 | percent! 64
+```
+
+
+```red
+>> make vector! [integer! 32 [1 2 3 4 5]]
+== make vector! [1 2 3 4 5]
+
+>> make vector! [#"r" #"e" #"d"]
+== make vector! [#"r" #"e" #"d"]
+```
+
+Jeżeli wartość `integer!` albo `float!` jest dostarczona do `make`, wtedy wartość `vector!` będzie rozmiaru `N` z wartościami zainicjowanymi `0`.
+
+```red
+>> make vector! 3
+== make vector! [0 0 0]
+
+>> make vector! 3.0
+== make vector! [0 0 0]
+```
+
+== Porównania
+
+Wszystkie operatory porównań mogą być użyte z `vector!`: `=, ==, <>, >, <, >=, &lt;=, =?`. Ponadto `min` i `max` też są wspierane.
+
+== Arytmetyka
+
+`+ - * / // %`
+
+`add`, `average`, `divide`, `mod`, `modulo`, `multiply`, `remainder`, `subtract`, `sum`
+
+Arytmetyka między wartościami `vector!` zwróci nową wartość `vector!`
+
+```red
+>> x: make vector! [1 2 3 4]
+== make vector! [1 2 3 4]
+
+>> y: make vector! [5 6 7 8]
+== make vector! [5 6 7 8]
+
+>> x * y
+== make vector! [5 12 21 32]
+```
+
+Wartości `vector!` nie są modyfikowane.
+
+```red
+>> x
+== make vector! [1 2 3 4]
+
+>> y
+== make vector! [5 6 7 8]
+```
+
+Arytmetyka na jednej wartości `vector!` zmodyfikuje on tą wartość `vector!`.
+
+```red
+>> x * 2
+== make vector! [2 4 6 8]
+
+>> x
+== make vector! [2 4 6 8]
+```
+
+`Copy` może być użyte, aby uchronić wartość `vector!` przed modyfikacją.
+
+```red
+>> (copy x) * 2
+== make vector! [2 4 6 8]
+
+>> x
+== make vector! [1 2 3 4]
+
+>> 2 * copy x
+== make vector! [2 4 6 8]
+
+>> x
+== make vector! [1 2 3 4]
+```
+
+== Testowanie wartości
+
+Użyj `vector?`, aby sprawdzić czy wartość jest typu `vector!`.
+
+```red
+>> vector? x
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? y
+== vector!
+```
+
+== Poprzednio zdefiniowane słowa
+
+=== Akcje
+
+`add`, `and~`, `divide`, `multiply`, `or~`, `remainder`, `subtract`, `xor~`
+
+=== Funkcje
+
+`average`, `draw`, `mod`, `modulo`, `sum`, `vector?`
+
+=== Operatory
+
+`%`, `*`, `+`, `-`, `/`, `//`
