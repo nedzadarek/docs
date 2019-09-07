@@ -4,7 +4,7 @@
 
 == Streszczenie
 
-Wartości `image!` zawierają wartość `series!` danych RGBA, które reprezentują piksele w obrazie 2D.
+Wartości `image!` zawierają wartość `series!` danych RGBA, które reprezentują piksele w obrazie 2D. Obraz 2D jest rzutowany na jednowymiarową przestrzeń zaczynając od pierwszego rzędu, od lewa do prawa, później drugi rząd, itd.
 
 `Image!` jest członkiem danych typesetów (zbiór typów): `any-type!`, `default!`, `series!`
 
@@ -166,6 +166,34 @@ Zwraca albo ustawia kanały RGB obrazu.
 == 1x1
 ```
 
+== Manipulacja
+
+Wartości `image!` mogą być manipulowane jako wartości `series!`:
+
+```red
+>> a: make image! [2x2 #{111111222222333333444444}]
+== make image! [2x2 #{111111222222333333444444}]
+
+>> copy/part a 1
+== make image! [1x1 #{111111}]
+
+>> copy/part a 2
+== make image! [2x1 #{111111222222}]
+```
+
+Czasami wartości `image!` mogą być interpretowane jako dwuwymiarowe wartości `series!`:
+
+```red
+>> a: make image! [2x2 #{111111222222333333444444}]
+== make image! [2x2 #{111111222222333333444444}]
+
+>> copy/part a 1x2
+== make image! [1x2 #{111111333333}]
+
+>> copy/part a 2x1
+== make image! [2x1 #{111111222222}]
+```
+
 == Konwersja
 
 `To image!` konwertuje obiekt Red/View `face!` do wartości `image!`.
@@ -192,7 +220,7 @@ Zwraca albo ustawia kanały RGB obrazu.
     color: none
     menu:...
 
-    >> to image! lay
+>> to image! lay
 == make image! [132x73 #{
     0000000000000000000000004D4D4D4D4D4D4D4D4D4D4D4D4D4D4D4D4D4D
     4D4D4D4D4D4D4D4D4D4D4D4D4D4D4D4D4D4D4D4D4D4D4D4...
