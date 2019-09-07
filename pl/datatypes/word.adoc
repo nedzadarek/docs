@@ -1,0 +1,98 @@
+= Word! - typ danych
+:toc:
+:numbered:
+
+== Streszczenie
+
+Wartość `word!` jest symboliczną wartością, która może być użyta jako zmienna, czyli identyfikator, który wskazuje na wartość w danym kontekście.
+
+Wartości `word!` nie przechowują wartości. Wskazują one na wartości w danym kontekście. Jeśli nie mają podanego kontekstu to domyślnie jest wybierany główny kontekst.
+
+Wartość `word!` jest członkiem danych typesetów (zbiór typów): `any-word!`, `all-word!`, `immediate!`
+
+=== Wariacje
+
+|========================================================================
+|*Syntaktyka*|*Typ*|*Opis*
+|word|`word!`|Wskazuje na wartość w danym kontekście.
+|word:|link:set-word.adoc[set-word!]|Ustawia odniesienie do wartości.
+|:word|link:get-word.adoc[get-word!]|Otrzymuje wartość bez wykonania.
+|'word|link:lit-word.adoc[lit-word!]|Powtrzymuje wykonanie. Dosłowna wartość "word".
+|/word|link:refinement.adoc[refinement!]|Wykonuje wartość `word!` jako refinement.
+|========================================================================
+
+== Tworzenie
+
+Wartości `word!` mogą być utworzone przy użyciu dosłownej składni albo podczas wykonywania przy użyciu konwertera `to` z danych datatype'ów: `char!`, `logic!`, `string!`, `datatype!`, `issue!`, and `refinement!`.
+
+
+```red
+>> to word! #"X"
+== X
+
+>> to word! true   ; zwraca reprezentacje wartości jako wartość `word!`
+== true
+
+>> to word! "Hello"
+== Hello
+
+>> to word! float!  ; zwraca reprezentacje wartości jako wartość `word!`
+== float!
+
+>> to word! #hi
+== hi
+
+>> to word! /deep
+== deep
+```
+
+[NOTE, caption=Note]
+
+Próba konwersji `none` wywoła błąd.
+
+== Dosłowna składnia
+
+Jedna albo wiecej znaków z całego przedziału Unicode, włączając znaki interpunkcyjne z podzakresu ASCII: `! & ' * + - . < = > ? _ | ~``
+
+[NOTE, caption=Note]
+
+Wartości `word!` są niewrażliwe na wielkość liter. Zmiana jakiejkolwiek litery w dużą lub małą literę nie stworzy nowej wartości.
+
+Niedozwolone znaki to znaki kontrolne, znaki niedrukowalne oraz znaki interpunkcyjne z podzakresu ASCII: `/ \ ^ , [ ] ( ) { } " # $ % @ : ;`
+
+Wartości `word!` nie mogą zaczynać się od numeru.
+
+== Kroki wykonywania
+
+* Znajdź kontekst, do którego wartość `word!` jest powiązana
+
+* Odbierz wartość, na którą jest wskazywana w danym kontekście.
+
+* Sprawdź typ wartości:
+
+** Jeżeli wartość nie istnieje, to jej typ to `unset!`. Błąd będzie zwrócony.
+
+** Jeżeli typ wartości jest w zbiorze `any-function!` to wykonaj funkcję.
+
+** W innych przypadkach zwróć wartość.
+
+== Porównania
+
+Wszystkie operatory porównań mogą być użyte z `word!`: `=, ==, <>, >, <, >=, &lt;=, =?`.
+
+
+== Testowanie wartości
+
+Użyj `word?`, aby sprawdzić czy wartość jest typu `word!`.
+
+```red
+>> word? first [let us code]
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? first [let us code]
+== word!
+```
