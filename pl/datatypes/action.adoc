@@ -1,0 +1,43 @@
+= Action! - typ danych
+:toc:
+:numbered:
+
+== Streszczenie
+
+Wartości `action!` reprezentują metody datatype'ów w wewnętrznym modelu OO Red. Są napisane w Red/System i definiują stały interfejs, który każdy datatype może, albo nie musi, zaimplementować.
+
+Akcje są używane jako normalne funkcje.
+
+Wartość `action!` jest członkiem danych typesetów (zbiór typów): `any-function!`, `default!`
+
+== Tworzenie
+
+Akcje nie mogą być utworzone podczas wykonywania.
+
+== Konwersja
+
+Wartości `action!` nie wspierają konwersji.
+
+== Porównania
+
+Wartości `action!` mogą być porównane ze względu na identyczność i równość używając `same?`, `==`, `equal?`, `strict-equal?`, `not-equal?`, `<>`.
+
+== Testowanie wartości
+
+Użyj `action?`, aby sprawdzić czy wartość jest typu `action!`.
+
+```red
+>> action? :to
+== true
+```
+
+Użyj `type?`, aby zwrócić typ danych danej wartości.
+
+```red
+>> type? :to
+== action!
+```
+
+== Poprzednio zdefiniowane słowa
+
+Poprzednio zdefiniowane wartości `action!` mogą być przeglądnięte poprzez wpisanie `help action!` w konsoli Red.
