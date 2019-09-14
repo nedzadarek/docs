@@ -266,3 +266,34 @@ clear #(a 1 b 2 c 3)
 
  body-of #(a: 123 b: 456)
  == [a: 123 b: 456]
+
+
+== Powtarzanie
+
+
+* Przy użyciu `keys-of` z `foreach`
++
+
+```red
+>> foreach k keys-of #(a: 123 b: 456) [print k]
+a
+b
+```
+
+* Przy użyciu `values-of` z `foreach`
++
+
+```red
+>> foreach v values-of #(a: 123 b: 456) [print v]
+123
+456
+```
+
+* Wartość `block!` zawierająca dwa słowa musi być podana jeśli używamy `foreach` bez `keys-of` albo `values-of`
++
+
+```red
+>> foreach [k v] #(a: 123 b: 456) [print [k v]]
+a 123
+b 456
+```
